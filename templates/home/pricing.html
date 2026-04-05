@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="page-shell page-shell--narrow">
+  <section class="page-hero reveal">
+    <p class="badge">Pricing</p>
+    <h1>Build smarter. Launch faster.</h1>
+    <p class="lede">
+      Choose a package designed to move your business forward. From simple websites to powerful digital systems,
+      we have you covered.
+    </p>
+  </section>
+
+  <section class="section reveal">
+    <div class="section__heading">
+      <p class="eyebrow">Web development packages</p>
+      <h2 class="section-title">Choose the right package for your growth.</h2>
+    </div>
+    <div class="pricing-grid">
+      <article class="pricing-card">
+        <h3>Starter – Ksh 30,000</h3>
+        <p class="pricing-price">Perfect for getting online quickly</p>
+        <ul>
+          <li>Clean 3–5 page website</li>
+          <li>Fully responsive (mobile &amp; desktop)</li>
+          <li>Contact &amp; WhatsApp integration</li>
+          <li>Basic SEO setup</li>
+          <li>Fast delivery: 5–7 days</li>
+        </ul>
+        <p><strong>Ideal for startups and small businesses.</strong></p>
+      </article>
+      <article class="pricing-card pricing-card--featured">
+        <h3>Business – Ksh 65,000</h3>
+        <p class="pricing-price">Built to grow your brand and attract clients</p>
+        <ul>
+          <li>6–10 professional pages</li>
+          <li>CMS (manage your content easily)</li>
+          <li>Blog + SEO optimization</li>
+          <li>Google Analytics integration</li>
+          <li>Domain &amp; hosting setup</li>
+          <li>Delivery: 10–14 days</li>
+        </ul>
+        <p><strong>Best for businesses ready to scale.</strong></p>
+      </article>
+      <article class="pricing-card">
+        <h3>Premium – Ksh 120,000</h3>
+        <p class="pricing-price">Powerful, scalable, and revenue-focused</p>
+        <ul>
+          <li>Unlimited pages</li>
+          <li>Full e-commerce system</li>
+          <li>M-Pesa + card payments</li>
+          <li>Custom features &amp; design</li>
+          <li>Advanced SEO</li>
+          <li>Admin dashboard</li>
+          <li>Delivery: 2–4 weeks</li>
+        </ul>
+        <p><strong>For serious brands and online stores.</strong></p>
+      </article>
+    </div>
+    <div class="pricing-footnote">
+      <p><strong>AI solutions:</strong> From $700 per project. Custom AI systems are priced by scope.</p>
+    </div>
+  </section>
+
+  <section class="section section-panel reveal">
+    <div class="section__heading">
+      <p class="eyebrow">Add-ons (optional upgrades)</p>
+      <h2 class="section-title">Enhance your website with extra features.</h2>
+    </div>
+    <div class="grid grid--3">
+      <article class="stat-card">
+        <h4>Domain</h4>
+        <p>Ksh 1,500 – 3,000 / year</p>
+      </article>
+      <article class="stat-card">
+        <h4>Hosting</h4>
+        <p>Ksh 5,000 – 10,000 / year</p>
+      </article>
+      <article class="stat-card">
+        <h4>Maintenance</h4>
+        <p>Ksh 3,000 – 5,000 / month</p>
+      </article>
+      <article class="stat-card">
+        <h4>SEO</h4>
+        <p>Ksh 10,000 – 20,000</p>
+      </article>
+      <article class="stat-card">
+        <h4>Extra pages</h4>
+        <p>Ksh 1,500 / page</p>
+      </article>
+    </div>
+    <div class="pricing-notes">
+      <p><strong>Project terms:</strong> 50% deposit required to start. Remaining balance after completion.</p>
+      <p>Pricing may vary based on requirements.</p>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="section__heading">
+      <p class="eyebrow">Ready to build something powerful?</p>
+      <h2 class="section-title">Start your project or request a quote.</h2>
+    </div>
+    <div class="button-group">
+      <a class="button button--primary" href="{% url 'contact' %}">Start Your Project</a>
+      <a class="button button--ghost" href="{% url 'contact' %}">Request a Quote</a>
+    </div>
+  </section>
+</main>
+{% endblock %}

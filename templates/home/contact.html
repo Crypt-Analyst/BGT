@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="page-shell page-shell--narrow">
+  <section class="page-hero reveal">
+    <p class="badge">Start Your Project</p>
+    <h1>Let's build something amazing together.</h1>
+    <p class="lede">
+      At Bwire Global Tech, we turn your ideas into powerful digital solutions. Whether you need a professional
+      website, an e-commerce store, or a custom tech solution, we are here to make it happen. Fill out the form
+      below and let's get your project started.
+    </p>
+  </section>
+
+  <section class="contact-layout reveal">
+    <div class="contact-panel">
+      <h3>Project brief</h3>
+      {% if submitted %}
+        <div class="success-banner">
+          Thanks for reaching out! We have received your project request and will get back to you within 24 hours.
+        </div>
+      {% endif %}
+      <form method="post" class="contact-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-grid">
+          <label class="form-field">
+            <span>Full name</span>
+            {{ form.full_name }}
+          </label>
+          <label class="form-field">
+            <span>Email</span>
+            {{ form.email }}
+          </label>
+          <label class="form-field">
+            <span>Phone / WhatsApp</span>
+            {{ form.phone }}
+          </label>
+          <label class="form-field">
+            <span>Project type</span>
+            {{ form.project_type }}
+          </label>
+          <label class="form-field form-field--full">
+            <span>Project description</span>
+            {{ form.message }}
+          </label>
+          <label class="form-field">
+            <span>Budget range (optional)</span>
+            {{ form.budget_range }}
+          </label>
+          <label class="form-field">
+            <span>Timeline / deadline (optional)</span>
+            {{ form.timeline }}
+          </label>
+          <label class="form-field">
+            <span>How did you hear about us? (optional)</span>
+            {{ form.referral_source }}
+          </label>
+          <label class="form-field">
+            <span>Upload a reference file (optional)</span>
+            {{ form.reference_file }}
+          </label>
+        </div>
+        <button class="button button--primary" type="submit">Send project request</button>
+      </form>
+    </div>
+
+    <aside class="contact-aside">
+      <div class="contact-aside__block">
+        <p class="eyebrow">Direct line</p>
+        <h3>bwireglobaltech917@gmail.com</h3>
+        <p>Use this email for direct project enquiries and business communication.</p>
+      </div>
+      <div class="contact-aside__block">
+        <p class="eyebrow">Owner &amp; socials</p>
+        <h3>Bilford Derick Bwire</h3>
+        <p>Phone: 0722206805</p>
+        <p>Instagram: bwireglobaltech</p>
+        <p>TikTok: bwireglobaltech</p>
+      </div>
+      <div class="contact-aside__block">
+        <p class="eyebrow">What to send</p>
+        <ul class="list-ticks">
+          <li>Your business name</li>
+          <li>Website goals</li>
+          <li>AI feature idea if needed</li>
+          <li>Budget range (optional)</li>
+          <li>Deadline or launch date</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section section-panel reveal">
+    <div class="section__heading">
+      <p class="eyebrow">What happens next</p>
+      <h2 class="section-title">A clear path after you submit.</h2>
+    </div>
+    <div class="step-grid">
+      <article class="step-card">
+        <span class="card__icon">01</span>
+        <h4>Review</h4>
+        <p>We read your brief and map the right web-first direction.</p>
+      </article>
+      <article class="step-card">
+        <span class="card__icon">02</span>
+        <h4>Call</h4>
+        <p>We schedule a short call to confirm scope and timeline.</p>
+      </article>
+      <article class="step-card">
+        <span class="card__icon">03</span>
+        <h4>Proposal</h4>
+        <p>You receive a clear proposal with deliverables and next steps.</p>
+      </article>
+    </div>
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="page-shell page-shell--narrow">
+    <section class="page-hero reveal">
+      <p class="badge">Services</p>
+      <h1>Web development is the main service. AI is the second focus.</h1>
+      <p class="lede">
+        Bwire Global Tech mainly builds websites and web apps, then adds AI solutions or support work when needed.
+      </p>
+    </section>
+
+    <section class="grid grid--2 section reveal">
+      <article class="service-card">
+        <h3>Software development</h3>
+        <p>Fast, responsive websites and web apps built to support visibility, leads, and operations.</p>
+        <ul class="list-ticks">
+          <li>Landing pages</li>
+          <li>Business portals</li>
+          <li>Internal tools</li>
+        </ul>
+      </article>
+      <article class="service-card">
+        <h3>AI solutions</h3>
+        <p>AI ideas, assistants, dashboards, and data workflows that help businesses work faster and smarter.</p>
+        <ul class="list-ticks">
+          <li>Predictive models</li>
+          <li>BwiResQ AI ideas</li>
+          <li>Smart analytics</li>
+        </ul>
+      </article>
+      <article class="service-card">
+        <h3>Support services</h3>
+        <p>Cloud setup, security reviews, maintenance, and design support for live websites and systems.</p>
+        <ul class="list-ticks">
+          <li>Cloud setup</li>
+          <li>Security checks</li>
+          <li>Maintenance plans</li>
+        </ul>
+      </article>
+      <article class="service-card">
+        <h3>Design and dashboards</h3>
+        <p>Visual identity, UI polish, and reporting dashboards that support the web product and the brand.</p>
+        <ul class="list-ticks">
+          <li>Graphic design</li>
+          <li>Dashboards</li>
+          <li>UI support</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section section-panel reveal">
+      <div class="section__heading">
+        <p class="eyebrow">Deliverables</p>
+        <h2 class="section-title">What you receive after launch.</h2>
+      </div>
+      <div class="grid grid--3">
+        <article class="stat-card">
+          <h4>Production-ready site</h4>
+          <p>Responsive layout, clear navigation, and a conversion-first structure.</p>
+        </article>
+        <article class="stat-card">
+          <h4>Performance baseline</h4>
+          <p>Optimized load speed, asset compression, and SEO-ready metadata.</p>
+        </article>
+        <article class="stat-card">
+          <h4>Growth roadmap</h4>
+          <p>AI or dashboard enhancements planned after the site proves itself.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-panel reveal">
+      <div class="section__heading">
+        <p class="eyebrow">Pricing</p>
+        <h2 class="section-title">See package details and add-ons.</h2>
+      </div>
+      <a class="button button--primary" href="{% url 'pricing' %}">View pricing</a>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__heading">
+        <p class="eyebrow">How we work</p>
+        <h2 class="section-title">A simple delivery flow that keeps the project moving.</h2>
+      </div>
+      <div class="timeline">
+        <div class="timeline__item">
+          <span>01</span>
+          <div>
+            <h4>Discover</h4>
+            <p>Gather the website goals, page structure, and any AI features needed.</p>
+          </div>
+        </div>
+        <div class="timeline__item">
+          <span>02</span>
+          <div>
+            <h4>Design</h4>
+            <p>Build pages and components with a strong mobile-friendly layout and clear conversion path.</p>
+          </div>
+        </div>
+        <div class="timeline__item">
+          <span>03</span>
+          <div>
+            <h4>Launch</h4>
+            <p>Deploy the site and then refine content, performance, and the contact flow.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-panel reveal">
+      <div class="section__heading">
+        <p class="eyebrow">FAQ</p>
+        <h2 class="section-title">Short answers before we start.</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>Do you offer maintenance?</summary>
+          <p>Yes. We provide post-launch support, updates, and security check-ins.</p>
+        </details>
+        <details>
+          <summary>Can you redesign an existing site?</summary>
+          <p>Yes. We can refresh messaging, structure, and UI while keeping your content.</p>
+        </details>
+        <details>
+          <summary>What do you need to start?</summary>
+          <p>Business goals, examples you admire, and any launch deadlines.</p>
+        </details>
+      </div>
+    </section>
+</main>
+{% endblock %}

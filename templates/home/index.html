@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<main class="page-shell">
+  <section class="hero hero--home">
+    <div class="hero__glow hero__glow--gold"></div>
+    <div class="hero__glow hero__glow--cyan"></div>
+
+    <header class="topbar reveal">
+      <div class="brand-lockup">
+        <div class="brand-mark brand-mark--hero" aria-hidden="true">
+          <img class="brand-mark__image" src="{% static 'images/logo.png' %}" alt="">
+        </div>
+        <div>
+          <p class="eyebrow">Web development first. AI second.</p>
+          <h1>{{ site_name }}</h1>
+        </div>
+      </div>
+      <a class="button button--ghost" href="#services">Explore services</a>
+    </header>
+
+    <div class="hero__content">
+      <div class="hero__copy reveal">
+        <p class="badge">{{ tagline }}</p>
+        <h2>We build websites first, then AI solutions that support the business.</h2>
+        <p class="lede">
+          Bwire Global Tech focuses on web development, then AI solutions, with added support for dashboards,
+          cloud setup, and design where needed. The website should reflect real work, not generic filler.
+        </p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="{% url 'contact' %}">Start a project</a>
+          <a class="button button--secondary" href="{% url 'about' %}">See the vision</a>
+        </div>
+        <ul class="metrics" aria-label="Key highlights">
+          <li><strong>01</strong><span>Web development</span></li>
+          <li><strong>02</strong><span>AI solutions</span></li>
+          <li><strong>03</strong><span>Dashboards and support</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section reveal" id="services">
+    <div class="section__heading">
+      <p class="eyebrow">What clients get</p>
+      <h3>Web development is the main service, with AI as the next layer.</h3>
+    </div>
+    <div class="grid grid--3">
+      <article class="card">
+        <span class="card__icon">01</span>
+        <h4>Web development</h4>
+        <p>Company websites, landing pages, portals, and dashboards built with Django, HTML, CSS, and JavaScript.</p>
+      </article>
+      <article class="card">
+        <span class="card__icon">02</span>
+        <h4>AI solutions</h4>
+        <p>Practical AI tools, assistants, and BwiResQ-style ideas that help businesses work faster and smarter.</p>
+      </article>
+      <article class="card">
+        <span class="card__icon">03</span>
+        <h4>Support services</h4>
+        <p>Cloud setup, dashboards, maintenance, and design support that keep the website useful after launch.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section-panel reveal">
+    <div class="section__heading">
+      <p class="eyebrow">Trusted by builders</p>
+      <h3>Teams who want a premium web presence.</h3>
+    </div>
+    <div class="logo-strip" aria-label="Industries served">
+      <span class="logo-pill">Fintech</span>
+      <span class="logo-pill">Health</span>
+      <span class="logo-pill">Education</span>
+      <span class="logo-pill">Logistics</span>
+      <span class="logo-pill">E-commerce</span>
+      <span class="logo-pill">Consulting</span>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="section__heading">
+      <p class="eyebrow">Case studies</p>
+      <h3>Proof of outcomes, not just promises.</h3>
+    </div>
+    <div class="case-grid">
+      <article class="case-card">
+        <span class="card__icon">01</span>
+        <h4>Corporate rebrand site</h4>
+        <p>Rebuilt structure, sharpened messaging, and delivered a conversion-first layout.</p>
+        <div class="case-meta">
+          <span>+42% engagement</span>
+          <span>+31% inquiries</span>
+        </div>
+      </article>
+      <article class="case-card">
+        <span class="card__icon">02</span>
+        <h4>AI services launch</h4>
+        <p>Focused offer, clear CTA, and a fast landing experience for lead capture.</p>
+        <div class="case-meta">
+          <span>2.1s load time</span>
+          <span>3x CTA taps</span>
+        </div>
+      </article>
+      <article class="case-card">
+        <span class="card__icon">03</span>
+        <h4>Business systems hub</h4>
+        <p>Unified services, support, and product pages into a clean navigation system.</p>
+        <div class="case-meta">
+          <span>12 new pages</span>
+          <span>100% brand consistency</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section-panel reveal">
+    <div class="section__heading">
+      <p class="eyebrow">Testimonials</p>
+      <h3>Real results from real clients.</h3>
+    </div>
+    <div class="grid grid--3">
+      <article class="quote-card">
+        <p>“The site feels premium and converts better. The web-first strategy delivered instantly.”</p>
+        <span class="quote-author">CEO, Fintech Studio</span>
+      </article>
+      <article class="quote-card">
+        <p>“Fast delivery, sharp visuals, and a clear roadmap for AI enhancements.”</p>
+        <span class="quote-author">Product Lead, Health Startup</span>
+      </article>
+      <article class="quote-card">
+        <p>“Their structure and copy made our offer easy to understand in seconds.”</p>
+        <span class="quote-author">Founder, Consulting Firm</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="section__heading">
+      <p class="eyebrow">FAQ</p>
+      <h3>Quick answers before we talk.</h3>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>Do you build websites only, or apps too?</summary>
+        <p>We build company websites, landing pages, portals, and web apps depending on scope.</p>
+      </details>
+      <details>
+        <summary>When does AI work start?</summary>
+        <p>AI comes after the web foundation is solid. We prioritize clarity, performance, and conversion first.</p>
+      </details>
+      <details>
+        <summary>How fast can you deliver?</summary>
+        <p>Timelines depend on scope, but most web projects launch in focused sprints.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="section section--split reveal">
+    <div>
+      <p class="eyebrow">Why clients choose us</p>
+      <h3>Fast websites first, then AI features when the business needs them.</h3>
+    </div>
+    <div>
+      <p>
+        The focus stays on practical results: a strong website, a clean layout, and the option to add AI,
+        dashboards, or support features when the project calls for it.
+      </p>
+    </div>
+  </section>
+
+  <section class="cta reveal">
+    <div>
+      <p class="eyebrow">Get started</p>
+      <h3>Send a website brief or an AI idea.</h3>
+      <p>We’ll turn it into a real project path, not generic filler.</p>
+    </div>
+    <a class="button button--primary" href="{% url 'contact' %}">Open contact page</a>
+  </section>
+</main>
+{% endblock %}

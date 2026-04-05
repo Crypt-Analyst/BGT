@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ page_title|default:'Bwire Global Tech' }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ page_description|default:'Bwire Global Tech - The Mind Behind the Machine.' }}{% endblock %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <form class="csrf-token-form" aria-hidden="true" tabindex="-1">
+    {% csrf_token %}
+  </form>
+  <a class="skip-link" href="#page-start">Skip to content</a>
+  <header class="site-header">
+    <div class="site-shell site-header__inner">
+      <a class="site-brand" href="{% url 'home' %}" aria-label="Bwire Global Tech home">
+        <span class="brand-mark brand-mark--small" aria-hidden="true">
+          <img class="brand-mark__image" src="{% static 'images/logo.png' %}" alt="">
+        </span>
+        <span>
+          <strong>{{ site_name|default:'Bwire Global Tech' }}</strong>
+          <small>{{ tagline|default:'The Mind Behind the Machine' }}</small>
+        </span>
+      </a>
+
+      <button class="site-menu-button" type="button" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+
+      <nav class="site-nav" id="primary-navigation" aria-label="Primary navigation" data-nav-panel>
+        {% for item in nav_items|default:'' %}
+          <a class="site-nav__link{% if active_page == item.name %} is-active{% endif %}" href="{% url item.url_name %}">{{ item.label }}</a>
+        {% endfor %}
+      </nav>
+
+      <a class="button button--ghost site-header__cta" href="{% url 'contact' %}">Start a project</a>
+    </div>
+  </header>
+
+  <div id="page-start">
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-shell site-footer__inner">
+      <div class="site-footer__brand">
+        <p class="eyebrow">{{ tagline|default:'The Mind Behind the Machine' }}</p>
+        <h3>{{ site_name|default:'Bwire Global Tech' }}</h3>
+        <p>Premium digital systems with a strong visual identity, built for trust, speed, and conversion.</p>
+        <a class="button button--primary site-footer__button" href="{% url 'contact' %}">Book a project</a>
+        <div class="site-footer__contact-lines">
+          <span>Owner: Bilford Derick Bwire</span>
+          <span>Email: bwireglobaltech917@gmail.com</span>
+          <span>Phone: 0722206805</span>
+        </div>
+      </div>
+      <div class="site-footer__column">
+        <h4>Services</h4>
+        <a href="{% url 'services' %}">Software development</a>
+        <a href="{% url 'services' %}">AI &amp; Data Science</a>
+        <a href="{% url 'services' %}">Cybersecurity</a>
+        <a href="{% url 'services' %}">Web &amp; cloud solutions</a>
+      </div>
+      <div class="site-footer__column">
+        <h4>Company</h4>
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'portfolio' %}">Portfolio</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <a href="https://instagram.com/bwireglobaltech" target="_blank" rel="noreferrer">Instagram</a>
+        <a href="https://www.tiktok.com/@bwireglobaltech" target="_blank" rel="noreferrer">TikTok</a>
+      </div>
+    </div>
+    <div class="site-shell site-footer__bottom">
+      <span>© <span data-year>2026</span> Bwire Global Tech</span>
+      <span>The Mind Behind the Machine</span>
+    </div>
+  </footer>
+  <div class="chat-widget" data-chat-widget>
+    <button class="chat-widget__toggle" type="button" aria-expanded="false" aria-controls="chat-panel">
+      <span>Lee</span>
+    </button>
+    <div class="chat-widget__panel" id="chat-panel" role="dialog" aria-label="Bwire Global Tech AI assistant" aria-hidden="true">
+      <div class="chat-widget__header">
+        <div>
+          <p class="chat-widget__eyebrow">Lee</p>
+          <strong>Ask about our website</strong>
+        </div>
+        <button class="chat-widget__close" type="button" aria-label="Close chat">Close</button>
+      </div>
+      <div class="chat-widget__messages" aria-live="polite"></div>
+      <form class="chat-widget__form" autocomplete="off">
+        <label class="sr-only" for="chat-widget-input">Ask a question</label>
+        <input id="chat-widget-input" name="message" type="text" placeholder="Ask about services, pricing, or contact" required>
+        <button class="chat-widget__send" type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+  <script src="{% static 'js/main.js' %}" defer></script>
+</body>
+</html>
