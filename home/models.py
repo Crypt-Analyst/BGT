@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -116,6 +117,46 @@ class HomeCaseStudy(models.Model):
 
 	def __str__(self) -> str:
 		return self.title
+
+
+class MediaAsset(models.Model):
+	MEDIA_TYPE_CHOICES = [
+		("image", "Image"),
+		("video", "Video"),
+	]
+
+	media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES, default="image")
+	title = models.CharField(max_length=140, blank=True)
+	caption = models.TextField(blank=True)
+	image = models.ImageField(upload_to="media/images/", blank=True)
+	video = models.FileField(upload_to="media/videos/", blank=True)
+	order = models.PositiveIntegerField(default=0)
+
+	class Meta:
+		abstract = True
+		ordering = ["order", "id"]
+
+	def clean(self) -> None:
+		if self.media_type == "image" and not self.image:
+			raise ValidationError("Image is required when media type is image.")
+		if self.media_type == "video" and not self.video:
+			raise ValidationError("Video is required when media type is video.")
+
+	def __str__(self) -> str:
+		label = self.title or "Media item"
+		return f"{label} ({self.media_type})"
+
+
+class HomeCaseStudyMedia(MediaAsset):
+	case_study = models.ForeignKey(
+		HomeCaseStudy,
+		on_delete=models.CASCADE,
+		related_name="media_items",
+	)
+
+	def __str__(self) -> str:
+		label = self.title or self.case_study.title
+		return f"{label} ({self.media_type})"
 
 
 class HomeTestimonial(models.Model):
@@ -360,6 +401,18 @@ class PortfolioItem(models.Model):
 		return self.title
 
 
+class PortfolioItemMedia(MediaAsset):
+	portfolio_item = models.ForeignKey(
+		PortfolioItem,
+		on_delete=models.CASCADE,
+		related_name="media_items",
+	)
+
+	def __str__(self) -> str:
+		label = self.title or self.portfolio_item.title
+		return f"{label} ({self.media_type})"
+
+
 class PortfolioOutcome(models.Model):
 	value = models.CharField(max_length=60)
 	label = models.CharField(max_length=120)
@@ -453,3 +506,9 @@ class PrivacyPage(models.Model):
 
 	def __str__(self) -> str:
 		return "Privacy page"
+
+
+class GalleryMedia(MediaAsset):
+	def __str__(self) -> str:
+		label = self.title or "Gallery media"
+		return f"{label} ({self.media_type})"

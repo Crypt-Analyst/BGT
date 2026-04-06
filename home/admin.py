@@ -17,10 +17,13 @@ from .models import (
 	HomeMetric,
 	HomeService,
 	HomeTestimonial,
+	HomeCaseStudyMedia,
+	GalleryMedia,
 	PortfolioDeepDive,
 	PortfolioDeepDiveMetric,
 	PortfolioHero,
 	PortfolioItem,
+	PortfolioItemMedia,
 	PortfolioOutcome,
 	PrivacyPage,
 	PricingAddon,
@@ -41,6 +44,18 @@ from .models import (
 admin.site.site_header = "Bwire Global Tech Admin"
 admin.site.site_title = "Bwire Global Tech Admin"
 admin.site.index_title = "Project Management"
+
+
+class HomeCaseStudyMediaInline(admin.TabularInline):
+	model = HomeCaseStudyMedia
+	extra = 1
+	fields = ("media_type", "title", "image", "video", "order")
+
+
+class PortfolioItemMediaInline(admin.TabularInline):
+	model = PortfolioItemMedia
+	extra = 1
+	fields = ("media_type", "title", "image", "video", "order")
 
 
 @admin.register(ProjectRequest)
@@ -77,6 +92,7 @@ class HomeServiceAdmin(admin.ModelAdmin):
 class HomeCaseStudyAdmin(admin.ModelAdmin):
 	list_display = ("title", "order")
 	ordering = ("order",)
+	inlines = (HomeCaseStudyMediaInline,)
 
 
 @admin.register(HomeTestimonial)
@@ -192,6 +208,7 @@ class PortfolioItemAdmin(admin.ModelAdmin):
 	list_display = ("title", "featured", "order")
 	list_filter = ("featured",)
 	ordering = ("order",)
+	inlines = (PortfolioItemMediaInline,)
 
 
 @admin.register(PortfolioOutcome)
@@ -236,3 +253,10 @@ class TermsPageAdmin(admin.ModelAdmin):
 @admin.register(PrivacyPage)
 class PrivacyPageAdmin(admin.ModelAdmin):
 	list_display = ("title",)
+
+
+@admin.register(GalleryMedia)
+class GalleryMediaAdmin(admin.ModelAdmin):
+	list_display = ("title", "media_type", "order")
+	list_filter = ("media_type",)
+	ordering = ("order",)

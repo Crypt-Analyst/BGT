@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import about, chat_ai, contact, home, portfolio, pricing, privacy, services, terms
+from .views import about, chat_ai, contact, gallery, home, portfolio, pricing, privacy, services, terms
 
 
 urlpatterns = [
@@ -9,6 +9,7 @@ urlpatterns = [
     path("services/", services, name="services"),
     path("pricing/", pricing, name="pricing"),
     path("portfolio/", portfolio, name="portfolio"),
+    path("gallery/", gallery, name="gallery"),
     path("contact/", contact, name="contact"),
     path("terms/", terms, name="terms"),
     path("privacy/", privacy, name="privacy"),

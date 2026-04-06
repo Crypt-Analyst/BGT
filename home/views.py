@@ -22,6 +22,7 @@ from .models import (
     ContactHero,
     ContactNextStep,
     DeliverableItem,
+    GalleryMedia,
     HomeCaseStudy,
     HomeCta,
     HomeFaq,
@@ -120,6 +121,7 @@ def site_context(page_title: str, page_description: str, active_page: str) -> di
             {"label": "Services", "url_name": "services", "name": "services"},
             {"label": "Pricing", "url_name": "pricing", "name": "pricing"},
             {"label": "Portfolio", "url_name": "portfolio", "name": "portfolio"},
+            {"label": "Gallery", "url_name": "gallery", "name": "gallery"},
             {"label": "Contact", "url_name": "contact", "name": "contact"},
         ],
     }
@@ -136,7 +138,7 @@ def home(request):
             "home_hero": HomeHero.objects.first(),
             "home_metrics": HomeMetric.objects.all(),
             "home_services": HomeService.objects.all(),
-            "home_case_studies": HomeCaseStudy.objects.all(),
+            "home_case_studies": HomeCaseStudy.objects.prefetch_related("media_items"),
             "home_testimonials": HomeTestimonial.objects.all(),
             "home_faqs": HomeFaq.objects.all(),
             "home_cta": HomeCta.objects.first(),
@@ -211,13 +213,23 @@ def portfolio(request):
     context.update(
         {
             "portfolio_hero": PortfolioHero.objects.first(),
-            "portfolio_items": PortfolioItem.objects.all(),
+            "portfolio_items": PortfolioItem.objects.prefetch_related("media_items"),
             "portfolio_outcomes": PortfolioOutcome.objects.all(),
             "portfolio_deep_dive": PortfolioDeepDive.objects.first(),
             "portfolio_deep_dive_metrics": PortfolioDeepDiveMetric.objects.all(),
         }
     )
     return render(request, "home/portfolio.html", context)
+
+
+def gallery(request):
+    context = site_context(
+        "Gallery | Bwire Global Tech",
+        "Explore images and videos from recent web and AI projects by Bwire Global Tech.",
+        "gallery",
+    )
+    context["gallery_media"] = GalleryMedia.objects.all()
+    return render(request, "home/gallery.html", context)
 
 
 def contact(request):

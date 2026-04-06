@@ -109,6 +109,17 @@
       {% if home_case_studies %}
         {% for item in home_case_studies %}
           <article class="case-card">
+            {% with media=item.media_items.all|first %}
+              {% if media %}
+                <div class="media-frame">
+                  {% if media.media_type == "image" and media.image %}
+                    <img src="{{ media.image.url }}" alt="{{ media.title|default:item.title }}">
+                  {% elif media.media_type == "video" and media.video %}
+                    <video src="{{ media.video.url }}" controls preload="metadata"></video>
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endwith %}
             <span class="card__icon">{{ forloop.counter|stringformat:"02d" }}</span>
             <h4>{{ item.title }}</h4>
             <p>{{ item.body }}</p>

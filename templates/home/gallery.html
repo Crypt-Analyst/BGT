@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="page-shell page-shell--narrow">
+  <section class="page-hero reveal">
+    <p class="badge">Gallery</p>
+    <h1>Project media from Bwire Global Tech.</h1>
+    <p class="lede">
+      Images and videos from recent web and AI projects. Upload media in the admin panel and it will appear here.
+    </p>
+  </section>
+
+  <section class="section reveal">
+    <div class="media-grid">
+      {% if gallery_media %}
+        {% for item in gallery_media %}
+          <article class="media-card">
+            <div class="media-frame">
+              {% if item.media_type == "image" and item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title|default:'Gallery image' }}">
+              {% elif item.media_type == "video" and item.video %}
+                <video src="{{ item.video.url }}" controls preload="metadata"></video>
+              {% endif %}
+            </div>
+            <div class="media-card__body">
+              <h4>{{ item.title|default:"Media item" }}</h4>
+              {% if item.caption %}
+                <p>{{ item.caption }}</p>
+              {% endif %}
+              <span class="media-pill">{{ item.media_type|capfirst }}</span>
+            </div>
+          </article>
+        {% endfor %}
+      {% else %}
+        <div class="section-panel">
+          <h3>No media yet.</h3>
+          <p>Add images and videos in the admin panel to populate this gallery.</p>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+</main>
+{% endblock %}
