@@ -22,20 +22,29 @@
 
     <div class="hero__content">
       <div class="hero__copy reveal">
-        <p class="badge">{{ tagline }}</p>
-        <h2>We build websites first, then AI solutions that support the business.</h2>
+        <p class="badge">{{ home_hero.badge|default:tagline }}</p>
+        <h2>{{ home_hero.title|default:"We build websites first, then AI solutions that support the business." }}</h2>
         <p class="lede">
-          Bwire Global Tech focuses on web development, then AI solutions, with added support for dashboards,
-          cloud setup, and design where needed. The website should reflect real work, not generic filler.
+          {{ home_hero.lede|default:"Bwire Global Tech focuses on web development, then AI solutions, with added support for dashboards, cloud setup, and design where needed. The website should reflect real work, not generic filler." }}
         </p>
         <div class="hero__actions">
-          <a class="button button--primary" href="{% url 'contact' %}">Start a project</a>
-          <a class="button button--secondary" href="{% url 'about' %}">See the vision</a>
+          <a class="button button--primary" href="{% url 'contact' %}">
+            {{ home_hero.primary_cta_label|default:"Start a project" }}
+          </a>
+          <a class="button button--secondary" href="{% url 'about' %}">
+            {{ home_hero.secondary_cta_label|default:"See the vision" }}
+          </a>
         </div>
         <ul class="metrics" aria-label="Key highlights">
-          <li><strong>01</strong><span>Web development</span></li>
-          <li><strong>02</strong><span>AI solutions</span></li>
-          <li><strong>03</strong><span>Dashboards and support</span></li>
+          {% if home_metrics %}
+            {% for item in home_metrics %}
+              <li><strong>{{ forloop.counter|stringformat:"02d" }}</strong><span>{{ item.label }}</span></li>
+            {% endfor %}
+          {% else %}
+            <li><strong>01</strong><span>Web development</span></li>
+            <li><strong>02</strong><span>AI solutions</span></li>
+            <li><strong>03</strong><span>Dashboards and support</span></li>
+          {% endif %}
         </ul>
       </div>
 
@@ -48,21 +57,31 @@
       <h3>Web development is the main service, with AI as the next layer.</h3>
     </div>
     <div class="grid grid--3">
-      <article class="card">
-        <span class="card__icon">01</span>
-        <h4>Web development</h4>
-        <p>Company websites, landing pages, portals, and dashboards built with Django, HTML, CSS, and JavaScript.</p>
-      </article>
-      <article class="card">
-        <span class="card__icon">02</span>
-        <h4>AI solutions</h4>
-        <p>Practical AI tools, assistants, and BwiResQ-style ideas that help businesses work faster and smarter.</p>
-      </article>
-      <article class="card">
-        <span class="card__icon">03</span>
-        <h4>Support services</h4>
-        <p>Cloud setup, dashboards, maintenance, and design support that keep the website useful after launch.</p>
-      </article>
+      {% if home_services %}
+        {% for item in home_services %}
+          <article class="card">
+            <span class="card__icon">{{ forloop.counter|stringformat:"02d" }}</span>
+            <h4>{{ item.title }}</h4>
+            <p>{{ item.body }}</p>
+          </article>
+        {% endfor %}
+      {% else %}
+        <article class="card">
+          <span class="card__icon">01</span>
+          <h4>Web development</h4>
+          <p>Company websites, landing pages, portals, and dashboards built with Django, HTML, CSS, and JavaScript.</p>
+        </article>
+        <article class="card">
+          <span class="card__icon">02</span>
+          <h4>AI solutions</h4>
+          <p>Practical AI tools, assistants, and BwiResQ-style ideas that help businesses work faster and smarter.</p>
+        </article>
+        <article class="card">
+          <span class="card__icon">03</span>
+          <h4>Support services</h4>
+          <p>Cloud setup, dashboards, maintenance, and design support that keep the website useful after launch.</p>
+        </article>
+      {% endif %}
     </div>
   </section>
 
@@ -87,33 +106,49 @@
       <h3>Proof of outcomes, not just promises.</h3>
     </div>
     <div class="case-grid">
-      <article class="case-card">
-        <span class="card__icon">01</span>
-        <h4>Corporate rebrand site</h4>
-        <p>Rebuilt structure, sharpened messaging, and delivered a conversion-first layout.</p>
-        <div class="case-meta">
-          <span>+42% engagement</span>
-          <span>+31% inquiries</span>
-        </div>
-      </article>
-      <article class="case-card">
-        <span class="card__icon">02</span>
-        <h4>AI services launch</h4>
-        <p>Focused offer, clear CTA, and a fast landing experience for lead capture.</p>
-        <div class="case-meta">
-          <span>2.1s load time</span>
-          <span>3x CTA taps</span>
-        </div>
-      </article>
-      <article class="case-card">
-        <span class="card__icon">03</span>
-        <h4>Business systems hub</h4>
-        <p>Unified services, support, and product pages into a clean navigation system.</p>
-        <div class="case-meta">
-          <span>12 new pages</span>
-          <span>100% brand consistency</span>
-        </div>
-      </article>
+      {% if home_case_studies %}
+        {% for item in home_case_studies %}
+          <article class="case-card">
+            <span class="card__icon">{{ forloop.counter|stringformat:"02d" }}</span>
+            <h4>{{ item.title }}</h4>
+            <p>{{ item.body }}</p>
+            {% if item.stat_primary or item.stat_secondary %}
+              <div class="case-meta">
+                {% if item.stat_primary %}<span>{{ item.stat_primary }}</span>{% endif %}
+                {% if item.stat_secondary %}<span>{{ item.stat_secondary }}</span>{% endif %}
+              </div>
+            {% endif %}
+          </article>
+        {% endfor %}
+      {% else %}
+        <article class="case-card">
+          <span class="card__icon">01</span>
+          <h4>Corporate rebrand site</h4>
+          <p>Rebuilt structure, sharpened messaging, and delivered a conversion-first layout.</p>
+          <div class="case-meta">
+            <span>+42% engagement</span>
+            <span>+31% inquiries</span>
+          </div>
+        </article>
+        <article class="case-card">
+          <span class="card__icon">02</span>
+          <h4>AI services launch</h4>
+          <p>Focused offer, clear CTA, and a fast landing experience for lead capture.</p>
+          <div class="case-meta">
+            <span>2.1s load time</span>
+            <span>3x CTA taps</span>
+          </div>
+        </article>
+        <article class="case-card">
+          <span class="card__icon">03</span>
+          <h4>Business systems hub</h4>
+          <p>Unified services, support, and product pages into a clean navigation system.</p>
+          <div class="case-meta">
+            <span>12 new pages</span>
+            <span>100% brand consistency</span>
+          </div>
+        </article>
+      {% endif %}
     </div>
   </section>
 
@@ -123,39 +158,63 @@
       <h3>Real results from real clients.</h3>
     </div>
     <div class="grid grid--3">
-      <article class="quote-card">
-        <p>“The site feels premium and converts better. The web-first strategy delivered instantly.”</p>
-        <span class="quote-author">CEO, Fintech Studio</span>
-      </article>
-      <article class="quote-card">
-        <p>“Fast delivery, sharp visuals, and a clear roadmap for AI enhancements.”</p>
-        <span class="quote-author">Product Lead, Health Startup</span>
-      </article>
-      <article class="quote-card">
-        <p>“Their structure and copy made our offer easy to understand in seconds.”</p>
-        <span class="quote-author">Founder, Consulting Firm</span>
-      </article>
+      {% if home_testimonials %}
+        {% for item in home_testimonials %}
+          <article class="quote-card">
+            <p>{{ item.quote }}</p>
+            <span class="quote-author">{{ item.author }}</span>
+          </article>
+        {% endfor %}
+      {% else %}
+        <article class="quote-card">
+          <p>“The site feels premium and converts better. The web-first strategy delivered instantly.”</p>
+          <span class="quote-author">CEO, Fintech Studio</span>
+        </article>
+        <article class="quote-card">
+          <p>“Fast delivery, sharp visuals, and a clear roadmap for AI enhancements.”</p>
+          <span class="quote-author">Product Lead, Health Startup</span>
+        </article>
+        <article class="quote-card">
+          <p>“Their structure and copy made our offer easy to understand in seconds.”</p>
+          <span class="quote-author">Founder, Consulting Firm</span>
+        </article>
+      {% endif %}
     </div>
   </section>
 
   <section class="section reveal">
     <div class="section__heading">
       <p class="eyebrow">FAQ</p>
-      <h3>Quick answers before we talk.</h3>
+      <h3>Quick Answers Before We Talk</h3>
     </div>
     <div class="faq-list">
-      <details>
-        <summary>Do you build websites only, or apps too?</summary>
-        <p>We build company websites, landing pages, portals, and web apps depending on scope.</p>
-      </details>
-      <details>
-        <summary>When does AI work start?</summary>
-        <p>AI comes after the web foundation is solid. We prioritize clarity, performance, and conversion first.</p>
-      </details>
-      <details>
-        <summary>How fast can you deliver?</summary>
-        <p>Timelines depend on scope, but most web projects launch in focused sprints.</p>
-      </details>
+      {% if home_faqs %}
+        {% for item in home_faqs %}
+          <details>
+            <summary>{{ item.question }}</summary>
+            <p>{{ item.answer|linebreaksbr }}</p>
+          </details>
+        {% endfor %}
+      {% else %}
+        <details>
+          <summary>Do you build websites only, or apps too?</summary>
+          <p>We build more than just websites. At Bwire Global Tech, we develop:</p>
+          <p>Professional websites<br>Web applications &amp; custom systems<br>AI-powered solutions<br>Data-driven platforms</p>
+          <p>Whether it is a simple site or a complex system, we tailor everything to your needs.</p>
+        </details>
+        <details>
+          <summary>When does AI work start?</summary>
+          <p>AI projects begin after a clear understanding of your requirements.</p>
+          <p>First, we review your idea and data<br>Then define the scope and solution<br>Development starts immediately after agreement and initial payment</p>
+          <p>Every AI project is customized to solve a specific problem, so planning is key.</p>
+        </details>
+        <details>
+          <summary>How fast can you deliver?</summary>
+          <p>Delivery depends on the package and project complexity:</p>
+          <p>Starter websites: 5-7 days<br>Business websites: 10-14 days<br>Premium / E-commerce: 2-4 weeks</p>
+          <p>For urgent projects, faster delivery may be arranged upon request.</p>
+        </details>
+      {% endif %}
     </div>
   </section>
 
@@ -174,11 +233,13 @@
 
   <section class="cta reveal">
     <div>
-      <p class="eyebrow">Get started</p>
-      <h3>Send a website brief or an AI idea.</h3>
-      <p>We’ll turn it into a real project path, not generic filler.</p>
+      <p class="eyebrow">{{ home_cta.eyebrow|default:"Get started" }}</p>
+      <h3>{{ home_cta.title|default:"Send a website brief or an AI idea." }}</h3>
+      <p>{{ home_cta.body|default:"We’ll turn it into a real project path, not generic filler." }}</p>
     </div>
-    <a class="button button--primary" href="{% url 'contact' %}">Open contact page</a>
+    <a class="button button--primary" href="{% url 'contact' %}">
+      {{ home_cta.button_label|default:"Open contact page" }}
+    </a>
   </section>
 </main>
 {% endblock %}

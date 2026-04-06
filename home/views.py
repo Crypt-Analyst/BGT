@@ -1,8 +1,9 @@
 import json
 import os
+from urllib.parse import quote
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage, send_mail
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
@@ -11,7 +12,42 @@ from django.views.decorators.http import require_POST
 from openai import OpenAI
 
 from .forms import ContactForm
-from .models import ProjectRequest
+from .models import (
+    AboutCapability,
+    AboutCard,
+    AboutHero,
+    AboutOwner,
+    AboutStep,
+    ContactChecklistItem,
+    ContactHero,
+    ContactNextStep,
+    DeliverableItem,
+    HomeCaseStudy,
+    HomeCta,
+    HomeFaq,
+    HomeHero,
+    HomeMetric,
+    HomeService,
+    HomeTestimonial,
+    PortfolioDeepDive,
+    PortfolioDeepDiveMetric,
+    PortfolioHero,
+    PortfolioItem,
+    PortfolioOutcome,
+    PrivacyPage,
+    PricingAddon,
+    PricingCta,
+    PricingHero,
+    PricingPackage,
+    PricingTerms,
+    ProjectRequest,
+    ServiceItem,
+    ServicesFaq,
+    ServicesHero,
+    SiteSettings,
+    TermsPage,
+    TimelineStep,
+)
 
 
 SITE_NAME = "Bwire Global Tech"
@@ -54,13 +90,30 @@ Next steps: Review, call, proposal.
 """.strip()
 
 
+def get_site_settings():
+    return SiteSettings.objects.first()
+
+
+def build_whatsapp_link(site_settings: SiteSettings | None) -> str:
+    number = site_settings.whatsapp_number if site_settings else "254722206805"
+    message = (
+        site_settings.whatsapp_message
+        if site_settings
+        else "Hi Bwire Global Tech, I'd like to start a project."
+    )
+    return f"https://wa.me/{number}?text={quote(message)}"
+
+
 def site_context(page_title: str, page_description: str, active_page: str) -> dict:
+    site_settings = get_site_settings()
     return {
-        "site_name": SITE_NAME,
-        "tagline": TAGLINE,
+        "site_settings": site_settings,
+        "site_name": site_settings.site_name if site_settings else SITE_NAME,
+        "tagline": site_settings.tagline if site_settings else TAGLINE,
         "page_title": page_title,
         "page_description": page_description,
         "active_page": active_page,
+        "whatsapp_link": build_whatsapp_link(site_settings),
         "nav_items": [
             {"label": "Home", "url_name": "home", "name": "home"},
             {"label": "About", "url_name": "about", "name": "about"},
@@ -78,6 +131,17 @@ def home(request):
         "Bwire Global Tech builds premium websites, AI experiences, and digital systems inspired by the brand logo.",
         "home",
     )
+    context.update(
+        {
+            "home_hero": HomeHero.objects.first(),
+            "home_metrics": HomeMetric.objects.all(),
+            "home_services": HomeService.objects.all(),
+            "home_case_studies": HomeCaseStudy.objects.all(),
+            "home_testimonials": HomeTestimonial.objects.all(),
+            "home_faqs": HomeFaq.objects.all(),
+            "home_cta": HomeCta.objects.first(),
+        }
+    )
     return render(request, "home/index.html", context)
 
 
@@ -86,6 +150,18 @@ def about(request):
         "About | Bwire Global Tech",
         "Learn the story, mission, and design direction behind Bwire Global Tech.",
         "about",
+    )
+    about_cards = AboutCard.objects.all()
+    context.update(
+        {
+            "about_hero": AboutHero.objects.first(),
+            "about_mission_vision": about_cards.filter(section__in=["mission", "vision"]),
+            "about_what": about_cards.filter(section="what"),
+            "about_values": about_cards.filter(section="values"),
+            "about_steps": AboutStep.objects.all(),
+            "about_capabilities": AboutCapability.objects.all(),
+            "about_owner": AboutOwner.objects.first(),
+        }
     )
     return render(request, "home/about.html", context)
 
@@ -96,6 +172,15 @@ def services(request):
         "Discover the services, systems, and delivery process behind the brand.",
         "services",
     )
+    context.update(
+        {
+            "services_hero": ServicesHero.objects.first(),
+            "service_items": ServiceItem.objects.all(),
+            "deliverables": DeliverableItem.objects.all(),
+            "timeline_steps": TimelineStep.objects.all(),
+            "services_faqs": ServicesFaq.objects.all(),
+        }
+    )
     return render(request, "home/services.html", context)
 
 
@@ -104,6 +189,15 @@ def pricing(request):
         "Pricing | Bwire Global Tech",
         "Explore the web development packages, AI pricing, and add-on services.",
         "pricing",
+    )
+    context.update(
+        {
+            "pricing_hero": PricingHero.objects.first(),
+            "pricing_packages": PricingPackage.objects.all(),
+            "pricing_addons": PricingAddon.objects.all(),
+            "pricing_terms": PricingTerms.objects.first(),
+            "pricing_cta": PricingCta.objects.first(),
+        }
     )
     return render(request, "home/pricing.html", context)
 
@@ -114,12 +208,22 @@ def portfolio(request):
         "See sample case studies and project outcomes built for a modern digital brand.",
         "portfolio",
     )
+    context.update(
+        {
+            "portfolio_hero": PortfolioHero.objects.first(),
+            "portfolio_items": PortfolioItem.objects.all(),
+            "portfolio_outcomes": PortfolioOutcome.objects.all(),
+            "portfolio_deep_dive": PortfolioDeepDive.objects.first(),
+            "portfolio_deep_dive_metrics": PortfolioDeepDiveMetric.objects.all(),
+        }
+    )
     return render(request, "home/portfolio.html", context)
 
 
 def contact(request):
     form = ContactForm(request.POST or None, request.FILES or None)
     submitted = False
+    contact_hero = ContactHero.objects.first()
 
     if request.method == "POST" and form.is_valid():
         cleaned = form.cleaned_data
@@ -147,14 +251,14 @@ def contact(request):
             "Project description:\n"
             f"{cleaned['message']}\n"
         )
-        send_mail(
-            admin_subject,
-            admin_message,
-            settings.DEFAULT_FROM_EMAIL,
-            [settings.CONTACT_EMAIL],
+        admin_email = EmailMessage(
+            subject=admin_subject,
+            body=admin_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[settings.CONTACT_EMAIL],
             reply_to=[cleaned["email"]],
-            fail_silently=not settings.DEBUG,
         )
+        admin_email.send(fail_silently=not settings.DEBUG)
 
         visitor_subject = "We received your project request"
         visitor_message = (
@@ -177,8 +281,36 @@ def contact(request):
         "Start a project with Bwire Global Tech through a direct contact form and project brief.",
         "contact",
     )
-    context.update({"form": form, "submitted": submitted})
+    context.update(
+        {
+            "form": form,
+            "submitted": submitted,
+            "contact_hero": contact_hero,
+            "contact_checklist": ContactChecklistItem.objects.all(),
+            "contact_next_steps": ContactNextStep.objects.all(),
+        }
+    )
     return render(request, "home/contact.html", context)
+
+
+def terms(request):
+    context = site_context(
+        "Terms of Use | Bwire Global Tech",
+        "Review the Bwire Global Tech terms of use, service scope, and payment policies.",
+        "terms",
+    )
+    context["terms_page"] = TermsPage.objects.first()
+    return render(request, "home/terms.html", context)
+
+
+def privacy(request):
+    context = site_context(
+        "Privacy Policy | Bwire Global Tech",
+        "Read the Bwire Global Tech privacy policy and data handling practices.",
+        "privacy",
+    )
+    context["privacy_page"] = PrivacyPage.objects.first()
+    return render(request, "home/privacy.html", context)
 
 
 @require_POST

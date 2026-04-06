@@ -3,12 +3,10 @@
 {% block content %}
 <main class="page-shell page-shell--narrow">
   <section class="page-hero reveal">
-    <p class="badge">Start Your Project</p>
-    <h1>Let's build something amazing together.</h1>
+    <p class="badge">{{ contact_hero.badge|default:"Start Your Project" }}</p>
+    <h1>{{ contact_hero.title|default:"Let's build something amazing together." }}</h1>
     <p class="lede">
-      At Bwire Global Tech, we turn your ideas into powerful digital solutions. Whether you need a professional
-      website, an e-commerce store, or a custom tech solution, we are here to make it happen. Fill out the form
-      below and let's get your project started.
+      {{ contact_hero.lede|default:"At Bwire Global Tech, we turn your ideas into powerful digital solutions. Whether you need a professional website, an e-commerce store, or a custom tech solution, we are here to make it happen. Fill out the form below and let's get your project started." }}
     </p>
   </section>
 
@@ -17,7 +15,7 @@
       <h3>Project brief</h3>
       {% if submitted %}
         <div class="success-banner">
-          Thanks for reaching out! We have received your project request and will get back to you within 24 hours.
+          {{ contact_hero.success_message|default:"Thanks for reaching out! We have received your project request and will get back to you within 24 hours." }}
         </div>
       {% endif %}
       <form method="post" class="contact-form" enctype="multipart/form-data">
@@ -67,24 +65,30 @@
     <aside class="contact-aside">
       <div class="contact-aside__block">
         <p class="eyebrow">Direct line</p>
-        <h3>bwireglobaltech917@gmail.com</h3>
+        <h3>{{ site_settings.email|default:"bwireglobaltech917@gmail.com" }}</h3>
         <p>Use this email for direct project enquiries and business communication.</p>
       </div>
       <div class="contact-aside__block">
         <p class="eyebrow">Owner &amp; socials</p>
-        <h3>Bilford Derick Bwire</h3>
-        <p>Phone: 0722206805</p>
-        <p>Instagram: bwireglobaltech</p>
-        <p>TikTok: bwireglobaltech</p>
+        <h3>{{ site_settings.owner_name|default:"Bilford Derick Bwire" }}</h3>
+        <p>Phone: {{ site_settings.phone|default:"0722206805" }}</p>
+        <p>Instagram: {{ site_settings.instagram|default:"bwireglobaltech" }}</p>
+        <p>TikTok: {{ site_settings.tiktok|default:"bwireglobaltech" }}</p>
       </div>
       <div class="contact-aside__block">
         <p class="eyebrow">What to send</p>
         <ul class="list-ticks">
-          <li>Your business name</li>
-          <li>Website goals</li>
-          <li>AI feature idea if needed</li>
-          <li>Budget range (optional)</li>
-          <li>Deadline or launch date</li>
+          {% if contact_checklist %}
+            {% for item in contact_checklist %}
+              <li>{{ item.label }}</li>
+            {% endfor %}
+          {% else %}
+            <li>Your business name</li>
+            <li>Website goals</li>
+            <li>AI feature idea if needed</li>
+            <li>Budget range (optional)</li>
+            <li>Deadline or launch date</li>
+          {% endif %}
         </ul>
       </div>
     </aside>
@@ -96,21 +100,33 @@
       <h2 class="section-title">A clear path after you submit.</h2>
     </div>
     <div class="step-grid">
-      <article class="step-card">
-        <span class="card__icon">01</span>
-        <h4>Review</h4>
-        <p>We read your brief and map the right web-first direction.</p>
-      </article>
-      <article class="step-card">
-        <span class="card__icon">02</span>
-        <h4>Call</h4>
-        <p>We schedule a short call to confirm scope and timeline.</p>
-      </article>
-      <article class="step-card">
-        <span class="card__icon">03</span>
-        <h4>Proposal</h4>
-        <p>You receive a clear proposal with deliverables and next steps.</p>
-      </article>
+      {% if contact_next_steps %}
+        {% for item in contact_next_steps %}
+          <article class="step-card">
+            <span class="card__icon">
+              {% if item.step_label %}{{ item.step_label }}{% else %}{{ forloop.counter|stringformat:"02d" }}{% endif %}
+            </span>
+            <h4>{{ item.title }}</h4>
+            <p>{{ item.body }}</p>
+          </article>
+        {% endfor %}
+      {% else %}
+        <article class="step-card">
+          <span class="card__icon">01</span>
+          <h4>Review</h4>
+          <p>We read your brief and map the right web-first direction.</p>
+        </article>
+        <article class="step-card">
+          <span class="card__icon">02</span>
+          <h4>Call</h4>
+          <p>We schedule a short call to confirm scope and timeline.</p>
+        </article>
+        <article class="step-card">
+          <span class="card__icon">03</span>
+          <h4>Proposal</h4>
+          <p>You receive a clear proposal with deliverables and next steps.</p>
+        </article>
+      {% endif %}
     </div>
   </section>
 </main>

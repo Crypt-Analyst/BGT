@@ -8,7 +8,7 @@
   <meta name="description" content="{% block description %}{{ page_description|default:'Bwire Global Tech - The Mind Behind the Machine.' }}{% endblock %}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -41,7 +41,9 @@
         {% endfor %}
       </nav>
 
-      <a class="button button--ghost site-header__cta" href="{% url 'contact' %}">Start a project</a>
+      <a class="button button--ghost site-header__cta" href="{% url 'contact' %}">
+        {{ site_settings.header_cta_label|default:"Start a project" }}
+      </a>
     </div>
   </header>
 
@@ -54,12 +56,12 @@
       <div class="site-footer__brand">
         <p class="eyebrow">{{ tagline|default:'The Mind Behind the Machine' }}</p>
         <h3>{{ site_name|default:'Bwire Global Tech' }}</h3>
-        <p>Premium digital systems with a strong visual identity, built for trust, speed, and conversion.</p>
+        <p>{{ site_settings.footer_blurb|default:"Premium digital systems with a strong visual identity, built for trust, speed, and conversion." }}</p>
         <a class="button button--primary site-footer__button" href="{% url 'contact' %}">Book a project</a>
         <div class="site-footer__contact-lines">
-          <span>Owner: Bilford Derick Bwire</span>
-          <span>Email: bwireglobaltech917@gmail.com</span>
-          <span>Phone: 0722206805</span>
+          <span>Owner: {{ site_settings.owner_name|default:"Bilford Derick Bwire" }}</span>
+          <span>Email: {{ site_settings.email|default:"bwireglobaltech917@gmail.com" }}</span>
+          <span>Phone: {{ site_settings.phone|default:"0722206805" }}</span>
         </div>
       </div>
       <div class="site-footer__column">
@@ -74,8 +76,10 @@
         <a href="{% url 'about' %}">About</a>
         <a href="{% url 'portfolio' %}">Portfolio</a>
         <a href="{% url 'contact' %}">Contact</a>
-        <a href="https://instagram.com/bwireglobaltech" target="_blank" rel="noreferrer">Instagram</a>
-        <a href="https://www.tiktok.com/@bwireglobaltech" target="_blank" rel="noreferrer">TikTok</a>
+        <a href="{% url 'terms' %}">Terms of Use</a>
+        <a href="{% url 'privacy' %}">Privacy Policy</a>
+        <a href="https://instagram.com/{{ site_settings.instagram|default:"bwireglobaltech" }}" target="_blank" rel="noreferrer">Instagram</a>
+        <a href="https://www.tiktok.com/@{{ site_settings.tiktok|default:"bwireglobaltech" }}" target="_blank" rel="noreferrer">TikTok</a>
       </div>
     </div>
     <div class="site-shell site-footer__bottom">
@@ -103,6 +107,9 @@
       </form>
     </div>
   </div>
+  <a class="whatsapp-fab" href="{{ whatsapp_link }}" target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">
+    <span class="whatsapp-fab__icon" aria-hidden="true">WA</span>
+  </a>
   <script src="{% static 'js/main.js' %}" defer></script>
 </body>
 </html>

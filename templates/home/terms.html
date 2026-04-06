@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="page-shell page-shell--narrow">
+  <section class="page-hero reveal">
+    <p class="badge">Terms of Use</p>
+    <h1>{{ terms_page.title|default:"Terms of Use - Bwire Global Tech (Advanced Version)" }}</h1>
+    <p class="lede">
+      {{ terms_page.lede|default:"These Terms govern your access to and use of our website, services, and digital solutions." }}
+    </p>
+  </section>
+
+  <section class="section reveal">
+    <div class="content-stack">
+      {% if terms_page and terms_page.body %}
+        {{ terms_page.body|safe }}
+      {% else %}
+        <h2>1. Introduction</h2>
+        <p>
+          Welcome to Bwire Global Tech. These Terms of Use ("Terms") govern your access to and use of our website,
+          services, and digital solutions. By accessing or using our website, you agree to be legally bound by these
+          Terms. If you do not agree, you must not use our services.
+        </p>
+
+        <h2>2. Definitions</h2>
+        <ul class="list-ticks">
+          <li>"Company" refers to Bwire Global Tech</li>
+          <li>"Client" / "User" refers to any individual or entity using our services</li>
+          <li>"Services" include web development, AI solutions, data science, cybersecurity, and digital systems</li>
+          <li>"Website" refers to all pages under our domain</li>
+        </ul>
+
+        <h2>3. Eligibility</h2>
+        <p>
+          You must be at least 18 years old or have legal authority to enter into agreements to use our services.
+        </p>
+
+        <h2>4. Scope of Services</h2>
+        <p>Bwire Global Tech provides digital services including but not limited to:</p>
+        <ul class="list-ticks">
+          <li>Website design and development</li>
+          <li>AI and data-driven systems</li>
+          <li>Cloud and web solutions</li>
+          <li>Cybersecurity services</li>
+        </ul>
+        <p>All services are delivered based on agreed project specifications.</p>
+
+        <h2>5. User Responsibilities</h2>
+        <p>You agree to:</p>
+        <ul class="list-ticks">
+          <li>Provide accurate and complete information</li>
+          <li>Respond to communication in a timely manner</li>
+          <li>Supply all required content (text, images, credentials, etc.)</li>
+          <li>Ensure you have rights to any materials provided</li>
+        </ul>
+        <p>You must not:</p>
+        <ul class="list-ticks">
+          <li>Use our services for illegal or harmful purposes</li>
+          <li>Attempt to exploit, hack, or disrupt our systems</li>
+          <li>Misrepresent your identity or intentions</li>
+        </ul>
+
+        <h2>6. Project Engagement &amp; Workflow</h2>
+        <h3>6.1 Project Initiation</h3>
+        <p>Projects begin only after agreement and deposit payment.</p>
+        <h3>6.2 Communication</h3>
+        <p>Clients must maintain clear and timely communication. Delays from the client may affect delivery timelines.</p>
+        <h3>6.3 Delivery</h3>
+        <p>Delivery timelines are estimates and may vary depending on scope and revisions.</p>
+
+        <h2>7. Payment Terms</h2>
+        <ul class="list-ticks">
+          <li>A 50% non-refundable deposit is required before project commencement</li>
+          <li>The remaining 50% must be paid before final delivery or deployment</li>
+          <li>Payments are accepted via agreed methods (e.g., M-Pesa, bank transfer, etc.)</li>
+        </ul>
+        <p>Failure to complete payment:</p>
+        <ul class="list-ticks">
+          <li>May result in project suspension</li>
+          <li>May lead to withholding of final deliverables</li>
+        </ul>
+
+        <h2>8. Refund Policy</h2>
+        <ul class="list-ticks">
+          <li>Deposits are non-refundable once work has commenced</li>
+          <li>Refunds (if any) are issued at the sole discretion of Bwire Global Tech</li>
+          <li>No refunds will be issued for completed or delivered work</li>
+        </ul>
+
+        <h2>9. Revisions and Scope Changes</h2>
+        <ul class="list-ticks">
+          <li>Revisions are limited to the agreed project scope</li>
+          <li>Additional features or major changes will be billed separately</li>
+          <li>Continuous or excessive revisions may incur additional charges</li>
+        </ul>
+
+        <h2>10. Intellectual Property Rights</h2>
+        <h3>10.1 Ownership</h3>
+        <p>All work remains the property of Bwire Global Tech until full payment is received.</p>
+        <h3>10.2 Transfer of Rights</h3>
+        <p>
+          Upon full payment, ownership of the final product is transferred to the client. Third-party tools, plugins,
+          or assets remain under their respective licenses.
+        </p>
+        <h3>10.3 Portfolio Rights</h3>
+        <p>We reserve the right to showcase completed work in our portfolio and marketing materials.</p>
+
+        <h2>11. Third-Party Services</h2>
+        <p>We may integrate third-party services including:</p>
+        <ul class="list-ticks">
+          <li>Hosting providers</li>
+          <li>Payment gateways (e.g., M-Pesa, PayPal)</li>
+          <li>APIs and external tools</li>
+        </ul>
+        <p>We are not responsible for:</p>
+        <ul class="list-ticks">
+          <li>Downtime or failures of third-party services</li>
+          <li>Changes in third-party pricing or policies</li>
+        </ul>
+
+        <h2>12. Data &amp; Security</h2>
+        <p>
+          While we implement best practices for security, we do not guarantee absolute protection against cyber
+          threats. Clients are responsible for maintaining their own credentials and backups.
+        </p>
+
+        <h2>13. Limitation of Liability</h2>
+        <p>
+          To the maximum extent permitted by law, Bwire Global Tech shall not be liable for indirect, incidental, or
+          consequential damages, loss of revenue, data, or business opportunities, or service interruptions beyond
+          our control.
+        </p>
+
+        <h2>14. Indemnification</h2>
+        <p>
+          You agree to indemnify and hold harmless Bwire Global Tech from any claims, damages, or liabilities
+          arising from your misuse of our services, content you provide, or violation of these Terms.
+        </p>
+
+        <h2>15. Termination of Services</h2>
+        <p>We reserve the right to suspend or terminate services if:</p>
+        <ul class="list-ticks">
+          <li>Terms are violated</li>
+          <li>Payments are not made</li>
+          <li>There is abuse, fraud, or unethical conduct</li>
+        </ul>
+
+        <h2>16. Governing Law</h2>
+        <p>These Terms shall be governed by and interpreted in accordance with the laws of Kenya.</p>
+
+        <h2>17. Changes to Terms</h2>
+        <p>
+          We reserve the right to update these Terms at any time. Continued use of our services constitutes
+          acceptance of the updated Terms.
+        </p>
+
+        <h2>18. Contact Information</h2>
+        <p>
+          For any inquiries regarding these Terms:<br>
+          Bwire Global Tech<br>
+          Email: bwireglobaltech917@gmail.com<br>
+          Phone: 0722206805
+        </p>
+      {% endif %}
+    </div>
+  </section>
+</main>
+{% endblock %}
