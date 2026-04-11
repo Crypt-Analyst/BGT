@@ -85,7 +85,11 @@ class HomeMetricAdmin(admin.ModelAdmin):
 @admin.register(HomeService)
 class HomeServiceAdmin(admin.ModelAdmin):
 	list_display = ("title", "order")
+	search_fields = ("title", "body")
 	ordering = ("order",)
+	fieldsets = (
+		(None, {"fields": ("title", "body", "order", "bullet_1", "bullet_2", "bullet_3")}),
+	)
 
 
 @admin.register(HomeCaseStudy)
@@ -98,7 +102,11 @@ class HomeCaseStudyAdmin(admin.ModelAdmin):
 @admin.register(HomeTestimonial)
 class HomeTestimonialAdmin(admin.ModelAdmin):
 	list_display = ("author", "order")
+	search_fields = ("author", "testimonial")
 	ordering = ("order",)
+	fieldsets = (
+		(None, {"fields": ("author", "testimonial", "order")}),
+	)
 
 
 @admin.register(HomeFaq)
@@ -110,6 +118,10 @@ class HomeFaqAdmin(admin.ModelAdmin):
 @admin.register(HomeCta)
 class HomeCtaAdmin(admin.ModelAdmin):
 	list_display = ("title", "button_label")
+	search_fields = ("title", "button_label")
+	fieldsets = (
+		(None, {"fields": ("title", "button_label", "url")}),
+	)
 
 
 @admin.register(AboutHero)
@@ -179,7 +191,11 @@ class PricingHeroAdmin(admin.ModelAdmin):
 class PricingPackageAdmin(admin.ModelAdmin):
 	list_display = ("name", "price", "featured", "order")
 	list_filter = ("featured",)
+	search_fields = ("name", "description")
 	ordering = ("order",)
+	fieldsets = (
+		(None, {"fields": ("name", "price", "featured", "order", "description")}),
+	)
 
 
 @admin.register(PricingAddon)
@@ -205,10 +221,24 @@ class PortfolioHeroAdmin(admin.ModelAdmin):
 
 @admin.register(PortfolioItem)
 class PortfolioItemAdmin(admin.ModelAdmin):
-	list_display = ("title", "featured", "order")
-	list_filter = ("featured",)
+	list_display = ("title", "category", "featured", "order")
+	list_filter = ("category", "featured")
+	search_fields = ("title", "body", "process", "testimonial", "results")
 	ordering = ("order",)
 	inlines = (PortfolioItemMediaInline,)
+	fieldsets = (
+		(None, {
+			"fields": ("label", "category", "title", "body", "featured", "order")
+		}),
+		("Bullets", {
+			"fields": ("bullet_1", "bullet_2", "bullet_3"),
+			"classes": ("collapse",)
+		}),
+		("Details", {
+			"fields": ("process", "testimonial", "results"),
+			"classes": ("collapse",)
+		}),
+	)
 
 
 @admin.register(PortfolioOutcome)
