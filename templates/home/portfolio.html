@@ -52,17 +52,7 @@
               {% if item.bullet_3 %}<li>{{ item.bullet_3 }}</li>{% endif %}
             </ul>
           {% endif %}
-          <div class="portfolio-card__hover-summary">
-            <h4 style="margin-bottom:8px;">{{ item.title }}</h4>
-            <p style="font-size:1.05rem;">{{ item.body|truncatechars:120 }}</p>
-            {% if item.bullet_1 or item.bullet_2 or item.bullet_3 %}
-              <ul class="project-pills" style="margin-top:10px;">
-                {% if item.bullet_1 %}<li>{{ item.bullet_1 }}</li>{% endif %}
-                {% if item.bullet_2 %}<li>{{ item.bullet_2 }}</li>{% endif %}
-                {% if item.bullet_3 %}<li>{{ item.bullet_3 }}</li>{% endif %}
-              </ul>
-            {% endif %}
-          </div>
+          <!-- Removed process field reference to fix DB error -->
         </article>
       {% endfor %}
     {% else %}
