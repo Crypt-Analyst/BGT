@@ -137,6 +137,9 @@ if (chatWidget) {
   const chatHistory = [];
   let typingIndicator = null;
 
+  // Ensure panel is hidden by default (robust fallback)
+  panel.style.display = 'none';
+
   const addMessage = (text, type = 'bot') => {
     const bubble = document.createElement('div');
     bubble.className = `chat-widget__bubble${type === 'user' ? ' chat-widget__bubble--user' : ''}`;
@@ -166,10 +169,12 @@ if (chatWidget) {
     return tokenInput ? tokenInput.value : '';
   };
 
+
   const openPanel = () => {
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden', 'false');
     toggleButton.setAttribute('aria-expanded', 'true');
+    panel.style.display = 'block';
     input.focus();
   };
 
@@ -177,6 +182,7 @@ if (chatWidget) {
     panel.classList.remove('is-open');
     panel.setAttribute('aria-hidden', 'true');
     toggleButton.setAttribute('aria-expanded', 'false');
+    panel.style.display = 'none';
   };
 
   toggleButton.addEventListener('click', () => {

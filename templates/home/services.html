@@ -1,3 +1,17 @@
+{% comment %} Workflow section moved below hero section {% endcomment %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<main class="page-shell page-shell--narrow">
+    <section class="page-hero reveal">
+      <p class="badge">{{ services_hero.badge|default:"Services" }}</p>
+      <h1>{{ services_hero.title|default:"Web development is the main service. AI is the second focus." }}</h1>
+      <p class="lede">
+        {{ services_hero.lede|default:"Bwire Global Tech mainly builds websites and web apps, then adds AI solutions or support work when needed." }}
+      </p>
+    </section>
+
     <section class="section section-panel reveal" style="margin-bottom: 32px;">
       <div class="section__heading">
         <p class="eyebrow">How we deliver</p>
@@ -21,17 +35,6 @@
           Deploy, monitor, and support your project.
         </li>
       </ol>
-    </section>
-{% extends "base.html" %}
-
-{% block content %}
-<main class="page-shell page-shell--narrow">
-    <section class="page-hero reveal">
-      <p class="badge">{{ services_hero.badge|default:"Services" }}</p>
-      <h1>{{ services_hero.title|default:"Web development is the main service. AI is the second focus." }}</h1>
-      <p class="lede">
-        {{ services_hero.lede|default:"Bwire Global Tech mainly builds websites and web apps, then adds AI solutions or support work when needed." }}
-      </p>
     </section>
 
     <section class="grid grid--2 section reveal">
