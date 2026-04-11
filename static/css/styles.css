@@ -85,9 +85,16 @@ a:hover, .button:hover, .button:focus {
     padding: 16px 0 6px;
     border-radius: 18px;
   }
-  .whatsapp-fab, .chat-widget {
+  .whatsapp-fab {
     left: 10px !important;
+    right: auto !important;
+    bottom: 10px !important;
+    width: 48px !important;
+    height: 48px !important;
+  }
+  .chat-widget {
     right: 10px !important;
+    left: auto !important;
     bottom: 10px !important;
     width: 48px !important;
     height: 48px !important;
