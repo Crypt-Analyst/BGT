@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<main class="page-shell page-shell--narrow">
+  <section class="page-hero reveal">
+    <p class="badge">{{ item.label }}</p>
+    <h1>{{ item.title }}</h1>
+    <p class="lede">{{ item.body }}</p>
+  </section>
+  <section class="section reveal">
+    {% if item.media_items.all %}
+      <div class="media-grid">
+        {% for media in item.media_items.all %}
+          <div class="media-frame">
+            {% if media.media_type == "image" and media.image %}
+              <img src="{{ media.image.url }}" alt="{{ media.title|default:item.title }}">
+            {% elif media.media_type == "video" and media.video %}
+              <video src="{{ media.video.url }}" controls preload="metadata"></video>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <ul class="project-pills" style="margin-top:18px;">
+      {% if item.bullet_1 %}<li>{{ item.bullet_1 }}</li>{% endif %}
+      {% if item.bullet_2 %}<li>{{ item.bullet_2 }}</li>{% endif %}
+      {% if item.bullet_3 %}<li>{{ item.bullet_3 }}</li>{% endif %}
+    </ul>
+    <div style="margin-top:24px;">
+      <h3>Process</h3>
+      <p>{{ item.process|default:"No process details provided." }}</p>
+      <h3>Client Testimonial</h3>
+      <blockquote>{{ item.testimonial|default:"No testimonial provided." }}</blockquote>
+      <h3>Results</h3>
+      <p>{{ item.results|default:"No results provided." }}</p>
+    </div>
+  </section>
+</main>
+{% endblock %}

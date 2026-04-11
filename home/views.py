@@ -1,3 +1,13 @@
+from django.shortcuts import get_object_or_404
+def portfolio_detail(request, pk):
+    item = get_object_or_404(PortfolioItem.objects.prefetch_related("media_items"), pk=pk)
+    context = site_context(
+        f"{item.title} | Portfolio | Bwire Global Tech",
+        item.body,
+        "portfolio",
+    )
+    context["item"] = item
+    return render(request, "home/portfolio_detail.html", context)
 import json
 import os
 from urllib.parse import quote
@@ -210,13 +220,27 @@ def portfolio(request):
         "See sample case studies and project outcomes built for a modern digital brand.",
         "portfolio",
     )
+    # Filtering
+    category = request.GET.get("category")
+    sort = request.GET.get("sort", "order")
+    items = PortfolioItem.objects.prefetch_related("media_items")
+    if category:
+        items = items.filter(category=category)
+    # Sorting
+    if sort == "title":
+        items = items.order_by("title")
+    else:
+        items = items.order_by("order", "id")
     context.update(
         {
             "portfolio_hero": PortfolioHero.objects.first(),
-            "portfolio_items": PortfolioItem.objects.prefetch_related("media_items"),
+            "portfolio_items": items,
             "portfolio_outcomes": PortfolioOutcome.objects.all(),
             "portfolio_deep_dive": PortfolioDeepDive.objects.first(),
             "portfolio_deep_dive_metrics": PortfolioDeepDiveMetric.objects.all(),
+            "portfolio_categories": PortfolioItem.CATEGORY_CHOICES,
+            "active_category": category,
+            "active_sort": sort,
         }
     )
     return render(request, "home/portfolio.html", context)

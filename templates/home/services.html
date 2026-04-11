@@ -1,3 +1,27 @@
+    <section class="section section-panel reveal" style="margin-bottom: 32px;">
+      <div class="section__heading">
+        <p class="eyebrow">How we deliver</p>
+        <h2 class="section-title">Step-by-step workflow</h2>
+      </div>
+      <ol style="display: flex; flex-wrap: wrap; gap: 24px; list-style: none; padding: 0; margin: 0;">
+        <li style="flex:1 1 180px; background: var(--panel); border-radius: 18px; padding: 18px 20px; margin-bottom: 0;">
+          <strong>1. Discovery</strong><br>
+          Understand your goals, needs, and vision.
+        </li>
+        <li style="flex:1 1 180px; background: var(--panel); border-radius: 18px; padding: 18px 20px; margin-bottom: 0;">
+          <strong>2. Design</strong><br>
+          Plan the structure, visuals, and user experience.
+        </li>
+        <li style="flex:1 1 180px; background: var(--panel); border-radius: 18px; padding: 18px 20px; margin-bottom: 0;">
+          <strong>3. Development</strong><br>
+          Build, test, and refine the solution.
+        </li>
+        <li style="flex:1 1 180px; background: var(--panel); border-radius: 18px; padding: 18px 20px; margin-bottom: 0;">
+          <strong>4. Launch</strong><br>
+          Deploy, monitor, and support your project.
+        </li>
+      </ol>
+    </section>
 {% extends "base.html" %}
 
 {% block content %}
@@ -14,6 +38,19 @@
       {% if service_items %}
         {% for item in service_items %}
           <article class="service-card">
+            <div style="font-size:2.2rem;margin-bottom:8px;">
+              {% if "web" in item.title|lower %}
+                <span aria-hidden="true">🌐</span>
+              {% elif "ai" in item.title|lower %}
+                <span aria-hidden="true">🤖</span>
+              {% elif "support" in item.title|lower %}
+                <span aria-hidden="true">🛠️</span>
+              {% elif "design" in item.title|lower or "dashboard" in item.title|lower %}
+                <span aria-hidden="true">🎨</span>
+              {% else %}
+                <span aria-hidden="true">💡</span>
+              {% endif %}
+            </div>
             <h3>{{ item.title }}</h3>
             <p>{{ item.body }}</p>
             {% if item.bullet_1 or item.bullet_2 or item.bullet_3 %}

@@ -384,8 +384,17 @@ class PortfolioHero(models.Model):
 		return "Portfolio hero"
 
 
+
 class PortfolioItem(models.Model):
+	CATEGORY_CHOICES = [
+		("web", "Web"),
+		("ai", "AI"),
+		("dashboards", "Dashboards"),
+		("other", "Other"),
+	]
+
 	label = models.CharField(max_length=120, default="Case study")
+	category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default="web")
 	title = models.CharField(max_length=200)
 	body = models.TextField()
 	bullet_1 = models.CharField(max_length=120, blank=True)
@@ -393,6 +402,9 @@ class PortfolioItem(models.Model):
 	bullet_3 = models.CharField(max_length=120, blank=True)
 	featured = models.BooleanField(default=False)
 	order = models.PositiveIntegerField(default=0)
+	process = models.TextField(blank=True)
+	testimonial = models.TextField(blank=True)
+	results = models.TextField(blank=True)
 
 	class Meta:
 		ordering = ["order", "id"]

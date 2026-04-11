@@ -1,3 +1,10 @@
+## Performance Metrics & Testing
+
+To measure page load, Lighthouse scores, and Core Web Vitals:
+
+- Use Chrome DevTools > Lighthouse tab for audits (performance, accessibility, SEO, best practices).
+- Use https://web.dev/measure/ for Core Web Vitals and lab data.
+- The site includes a Core Web Vitals script for real-user metrics (see base.html).
 # Bwire Global Tech
 
 Starter Django site for Bwire Global Tech, styled around the brand colors from the supplied logo.

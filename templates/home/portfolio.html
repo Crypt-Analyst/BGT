@@ -1,6 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
+  <form method="get" class="portfolio-filters" style="margin-bottom: 32px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center;">
+    <label for="category-select"><strong>Filter by type:</strong></label>
+    <select name="category" id="category-select" onchange="this.form.submit()">
+      <option value="">All</option>
+      {% for value, label in portfolio_categories %}
+        <option value="{{ value }}" {% if value == active_category %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <label for="sort-select"><strong>Sort by:</strong></label>
+    <select name="sort" id="sort-select" onchange="this.form.submit()">
+      <option value="order" {% if active_sort == "order" %}selected{% endif %}>Default</option>
+      <option value="title" {% if active_sort == "title" %}selected{% endif %}>Title</option>
+    </select>
+    {% if active_category or active_sort != 'order' %}
+      <a href="?" style="margin-left: 12px;">Reset</a>
+    {% endif %}
+  </form>
 <main class="page-shell page-shell--narrow">
   <section class="page-hero reveal">
     <p class="badge">{{ portfolio_hero.badge|default:"Portfolio" }}</p>
@@ -14,11 +31,12 @@
     {% if portfolio_items %}
       {% for item in portfolio_items %}
         <article class="portfolio-card{% if item.featured %} portfolio-card--featured{% endif %}">
+          <a href="{% url 'portfolio_detail' item.pk %}" style="position:absolute;inset:0;z-index:3;" aria-label="View details for {{ item.title }}"></a>
           {% with media=item.media_items.all|first %}
             {% if media %}
               <div class="media-frame">
                 {% if media.media_type == "image" and media.image %}
-                  <img src="{{ media.image.url }}" alt="{{ media.title|default:item.title }}">
+                  <img src="{{ media.image.url }}" alt="{{ media.title|default:item.title }}" loading="lazy">
                 {% elif media.media_type == "video" and media.video %}
                   <video src="{{ media.video.url }}" controls preload="metadata"></video>
                 {% endif %}
@@ -35,6 +53,17 @@
               {% if item.bullet_3 %}<li>{{ item.bullet_3 }}</li>{% endif %}
             </ul>
           {% endif %}
+          <div class="portfolio-card__hover-summary">
+            <h4 style="margin-bottom:8px;">{{ item.title }}</h4>
+            <p style="font-size:1.05rem;">{{ item.body|truncatechars:120 }}</p>
+            {% if item.bullet_1 or item.bullet_2 or item.bullet_3 %}
+              <ul class="project-pills" style="margin-top:10px;">
+                {% if item.bullet_1 %}<li>{{ item.bullet_1 }}</li>{% endif %}
+                {% if item.bullet_2 %}<li>{{ item.bullet_2 }}</li>{% endif %}
+                {% if item.bullet_3 %}<li>{{ item.bullet_3 }}</li>{% endif %}
+              </ul>
+            {% endif %}
+          </div>
         </article>
       {% endfor %}
     {% else %}
