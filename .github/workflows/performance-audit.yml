@@ -28,6 +28,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           npm install -g @lhci/cli
+          # Install Chromium for Lighthouse (ensures stable headless Chrome available)
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
       - name: Collect static files
         run: python manage.py collectstatic --noinput
       - name: Run migrations
@@ -35,7 +38,21 @@ jobs:
       - name: Start local Django server
         run: |
           nohup python manage.py runserver 127.0.0.1:8000 >server.log 2>&1 &
-          sleep 10
+          # Wait for the dev server to accept connections (up to 60s)
+          for i in {1..30}; do
+            if curl -sSf http://127.0.0.1:8000 >/dev/null; then
+              echo "Server is up" && break
+            fi
+            sleep 2
+          done
       - name: Run Lighthouse audit
+        env:
+          LHCI_CHROMIUM_PATH: /usr/bin/chromium-browser
         run: |
-          npx @lhci/cli autorun --collect.url=http://127.0.0.1:8000 --upload.target=filesystem
+          # Run LHCI using the installed Chromium and headless flags to avoid sandbox issues
+          npx @lhci/cli autorun \
+            --collect.url=http://127.0.0.1:8000 \
+            --upload.target=filesystem \
+            --collect.numberOfRuns=3 \
+            --chromeFlags='--no-sandbox --headless --disable-gpu' \
+            --chromePath=/usr/bin/chromium-browser
