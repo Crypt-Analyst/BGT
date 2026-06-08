@@ -1,7 +1,6 @@
 import ssl
 from pathlib import Path
 
-from django.conf import settings
 from django.core.management.base import CommandError
 from django.core.management.commands.runserver import Command as RunserverCommand
 from django.core.servers.basehttp import WSGIServer

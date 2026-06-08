@@ -4,10 +4,8 @@ Audit logging system for tracking important security events.
 
 import json
 import logging
-from datetime import datetime
 from typing import Any, Dict, Optional
 
-from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, User
 from django.db import models
 from django.utils import timezone

@@ -6,7 +6,6 @@ from .models import (
     AboutHero,
     AboutOwner,
     AboutStep,
-    AuditLog,
     ContactChecklistItem,
     ContactHero,
     ContactNextStep,
@@ -39,8 +38,6 @@ from .models import (
     SiteSettings,
     TermsPage,
     TimelineStep,
-    TwoFactorAuthenticationLog,
-    UserTwoFactorAuth,
 )
 
 admin.site.site_header = "Bwire Global Tech Admin"

@@ -3,7 +3,6 @@ Two-Factor Authentication models and utilities.
 """
 
 import base64
-from datetime import datetime, timedelta
 from io import BytesIO
 
 import pyotp

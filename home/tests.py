@@ -2,7 +2,6 @@ import json
 import os
 from unittest.mock import MagicMock, patch
 
-from django.conf import settings
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse

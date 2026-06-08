@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 
 from django.conf import settings
 from django.core.paginator import Paginator
@@ -45,7 +44,6 @@ from .models import (
     ServiceItem,
     ServicesFaq,
     ServicesHero,
-    SiteSettings,
     TermsPage,
     TimelineStep,
 )

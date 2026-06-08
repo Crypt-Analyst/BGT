@@ -1,6 +1,5 @@
 """Management command to check production readiness."""
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from bwire_global_tech.production import (
