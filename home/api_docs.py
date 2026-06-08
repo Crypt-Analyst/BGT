@@ -1,4 +1,5 @@
 """API documentation endpoint."""
+
 from django.http import JsonResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt

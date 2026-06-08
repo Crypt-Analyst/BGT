@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0004_gallerymedia_homecasestudymedia_portfolioitemmedia'),
+        ("home", "0004_gallerymedia_homecasestudymedia_portfolioitemmedia"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='portfolioitem',
-            name='category',
-            field=models.CharField(choices=[('web', 'Web'), ('ai', 'AI'), ('dashboards', 'Dashboards'), ('other', 'Other')], default='web', max_length=20),
+            model_name="portfolioitem",
+            name="category",
+            field=models.CharField(
+                choices=[
+                    ("web", "Web"),
+                    ("ai", "AI"),
+                    ("dashboards", "Dashboards"),
+                    ("other", "Other"),
+                ],
+                default="web",
+                max_length=20,
+            ),
         ),
     ]

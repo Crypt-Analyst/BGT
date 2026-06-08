@@ -1,6 +1,7 @@
 """
 Security utilities for encryption, data protection, and secure operations.
 """
+
 import json
 import logging
 from datetime import datetime, timedelta
@@ -17,9 +18,30 @@ logger = logging.getLogger(__name__)
 
 # HTML tags allowed in sanitized output
 ALLOWED_HTML_TAGS = {
-    "p", "br", "strong", "em", "u", "h1", "h2", "h3", "h4", "h5", "h6",
-    "ul", "ol", "li", "a", "blockquote", "code", "pre", "table", "thead",
-    "tbody", "tr", "td", "th"
+    "p",
+    "br",
+    "strong",
+    "em",
+    "u",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "ul",
+    "ol",
+    "li",
+    "a",
+    "blockquote",
+    "code",
+    "pre",
+    "table",
+    "thead",
+    "tbody",
+    "tr",
+    "td",
+    "th",
 }
 
 ALLOWED_HTML_ATTRIBUTES = {
@@ -40,7 +62,11 @@ class EncryptionManager:
             raise RuntimeError(
                 "ENCRYPTION_KEY must be set in settings for data encryption"
             )
-        self.cipher = Fernet(encryption_key.encode() if isinstance(encryption_key, str) else encryption_key)
+        self.cipher = Fernet(
+            encryption_key.encode()
+            if isinstance(encryption_key, str)
+            else encryption_key
+        )
 
     def encrypt(self, data: Any) -> str:
         """
@@ -98,7 +124,7 @@ class InputValidator:
             content,
             tags=ALLOWED_HTML_TAGS,
             attributes=ALLOWED_HTML_ATTRIBUTES,
-            strip=True
+            strip=True,
         )
 
     @staticmethod
@@ -129,7 +155,8 @@ class InputValidator:
             True if valid format, False otherwise
         """
         import re
-        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+        pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         return re.match(pattern, email) is not None
 
     @staticmethod
@@ -144,8 +171,9 @@ class InputValidator:
             True if valid format, False otherwise
         """
         import re
+
         # Allow various phone formats with country codes
-        pattern = r'^\+?1?\d{9,15}$'
+        pattern = r"^\+?1?\d{9,15}$"
         return re.match(pattern, phone.replace(" ", "").replace("-", "")) is not None
 
     @staticmethod
@@ -160,7 +188,8 @@ class InputValidator:
             True if valid format, False otherwise
         """
         import re
-        pattern = r'^https?://[^\s/$.?#].[^\s]*$'
+
+        pattern = r"^https?://[^\s/$.?#].[^\s]*$"
         return re.match(pattern, url, re.IGNORECASE) is not None
 
 
@@ -181,15 +210,35 @@ class FileUploadValidator:
 
     # Dangerous file extensions
     DANGEROUS_EXTENSIONS = {
-        "exe", "bat", "cmd", "com", "pif", "scr", "vbs", "js",
-        "jar", "zip", "rar", "7z", "iso", "dmg", "app", "sh",
-        "py", "php", "asp", "jsp", "pl", "rb", "cgi"
+        "exe",
+        "bat",
+        "cmd",
+        "com",
+        "pif",
+        "scr",
+        "vbs",
+        "js",
+        "jar",
+        "zip",
+        "rar",
+        "7z",
+        "iso",
+        "dmg",
+        "app",
+        "sh",
+        "py",
+        "php",
+        "asp",
+        "jsp",
+        "pl",
+        "rb",
+        "cgi",
     }
 
     # Maximum file sizes by type (in bytes)
     MAX_SIZES = {
         "image": 5 * 1024 * 1024,  # 5MB
-        "pdf": 10 * 1024 * 1024,   # 10MB
+        "pdf": 10 * 1024 * 1024,  # 10MB
         "document": 10 * 1024 * 1024,  # 10MB
     }
 

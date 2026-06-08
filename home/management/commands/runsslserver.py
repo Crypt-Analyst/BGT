@@ -62,9 +62,7 @@ class Command(RunserverCommand):
             if options.get("certificate")
             else None
         )
-        self.key = (
-            Path(options["key"]).expanduser() if options.get("key") else None
-        )
+        self.key = Path(options["key"]).expanduser() if options.get("key") else None
 
         if not self.certificate or not self.key:
             default_cert, default_key = get_default_cert_paths()

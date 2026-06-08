@@ -1,6 +1,7 @@
 """
 Audit logging system for tracking important security events.
 """
+
 import json
 import logging
 from datetime import datetime
@@ -10,7 +11,6 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, User
 from django.db import models
 from django.utils import timezone
-
 
 logger = logging.getLogger("audit")
 
@@ -53,7 +53,7 @@ class AuditLog(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="audit_logs"
+        related_name="audit_logs",
     )
     event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
     severity = models.CharField(max_length=20, choices=SEVERITY_CHOICES, default="low")
@@ -113,6 +113,7 @@ class AuditLogManager:
             try:
                 from ipware.ip import get_client_ip  # type: ignore
             except Exception:
+
                 def get_client_ip(req):
                     return (None, False)
 
@@ -149,7 +150,7 @@ class AuditLogManager:
                 "ip": client_ip,
                 "action": action,
                 "data": json.dumps(data or {}),
-            }
+            },
         )
 
         return audit_log
@@ -301,8 +302,7 @@ class AuditLogManager:
 
         threshold = timezone.now() - timedelta(days=days)
         return AuditLog.objects.filter(
-            severity__in=["high", "critical"],
-            timestamp__gte=threshold
+            severity__in=["high", "critical"], timestamp__gte=threshold
         ).order_by("-timestamp")[:limit]
 
 

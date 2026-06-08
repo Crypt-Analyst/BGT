@@ -1,4 +1,5 @@
 """Production environment validation and readiness checks."""
+
 import os
 from django.conf import settings
 
@@ -29,30 +30,45 @@ def check_production_ready():
 
     # Database checks
     if "sqlite" in settings.DATABASES["default"]["ENGINE"] and not settings.DEBUG:
-        checks["warnings"].append("SQLite database detected in production (not recommended for production)")
+        checks["warnings"].append(
+            "SQLite database detected in production (not recommended for production)"
+        )
 
-    if not os.getenv("DATABASE_URL") and "sqlite" not in settings.DATABASES["default"]["ENGINE"]:
+    if (
+        not os.getenv("DATABASE_URL")
+        and "sqlite" not in settings.DATABASES["default"]["ENGINE"]
+    ):
         checks["errors"].append("DATABASE_URL not set but Postgres is configured")
 
     # Email checks
     if not settings.EMAIL_HOST_PASSWORD and not settings.DEBUG:
-        checks["warnings"].append("EMAIL_HOST_PASSWORD not configured (email sending may fail)")
+        checks["warnings"].append(
+            "EMAIL_HOST_PASSWORD not configured (email sending may fail)"
+        )
 
     # API/Integration checks
     if not settings.OPENAI_API_KEY:
-        checks["warnings"].append("OPENAI_API_KEY not set (chat feature will be unavailable)")
+        checks["warnings"].append(
+            "OPENAI_API_KEY not set (chat feature will be unavailable)"
+        )
 
     # Celery checks
     if "localhost" in settings.CELERY_BROKER_URL:
-        checks["warnings"].append("CELERY_BROKER_URL points to localhost (Redis should be on network/container)")
+        checks["warnings"].append(
+            "CELERY_BROKER_URL points to localhost (Redis should be on network/container)"
+        )
 
     # Static files
     if not os.path.exists(settings.STATIC_ROOT) and not settings.DEBUG:
-        checks["warnings"].append(f"Static files not collected ({settings.STATIC_ROOT} missing)")
+        checks["warnings"].append(
+            f"Static files not collected ({settings.STATIC_ROOT} missing)"
+        )
 
     # Sentry
     if not settings.SENTRY_DSN:
-        checks["warnings"].append("SENTRY_DSN not configured (error tracking unavailable)")
+        checks["warnings"].append(
+            "SENTRY_DSN not configured (error tracking unavailable)"
+        )
 
     # Determine overall status
     if checks["errors"]:

@@ -1,7 +1,11 @@
 """Management command to check production readiness."""
+
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from bwire_global_tech.production import check_production_ready, get_production_checklist
+from bwire_global_tech.production import (
+    check_production_ready,
+    get_production_checklist,
+)
 
 
 class Command(BaseCommand):
@@ -14,9 +18,13 @@ class Command(BaseCommand):
 
         # Status
         status_style = (
-            self.style.SUCCESS if checks["status"] == "ready" else
-            self.style.WARNING if checks["status"] == "ready_with_warnings" else
-            self.style.ERROR
+            self.style.SUCCESS
+            if checks["status"] == "ready"
+            else (
+                self.style.WARNING
+                if checks["status"] == "ready_with_warnings"
+                else self.style.ERROR
+            )
         )
         self.stdout.write(status_style(f"Status: {checks['status'].upper()}"))
 
@@ -40,7 +48,9 @@ class Command(BaseCommand):
         checklist = get_production_checklist()
 
         for section, items in checklist.items():
-            self.stdout.write(self.style.HTTP_INFO(f"\n{section.upper().replace('_', ' ')}:"))
+            self.stdout.write(
+                self.style.HTTP_INFO(f"\n{section.upper().replace('_', ' ')}:")
+            )
             for i, item in enumerate(items, 1):
                 self.stdout.write(f"  [ ] {i}. {item}")
 

@@ -2,8 +2,12 @@ from django import forms
 
 
 class ContactForm(forms.Form):
-    full_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"placeholder": "Your full name"}))
-    email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "you@example.com"}))
+    full_name = forms.CharField(
+        max_length=120, widget=forms.TextInput(attrs={"placeholder": "Your full name"})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={"placeholder": "you@example.com"})
+    )
     phone = forms.CharField(
         max_length=50,
         widget=forms.TextInput(attrs={"placeholder": "Phone or WhatsApp"}),
@@ -17,7 +21,9 @@ class ContactForm(forms.Form):
         ],
         widget=forms.Select(),
     )
-    message = forms.CharField(widget=forms.Textarea(attrs={"placeholder": "Tell us about your project"}))
+    message = forms.CharField(
+        widget=forms.Textarea(attrs={"placeholder": "Tell us about your project"})
+    )
     budget_range = forms.ChoiceField(
         required=False,
         choices=[

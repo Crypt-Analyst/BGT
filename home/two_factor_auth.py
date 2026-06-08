@@ -1,6 +1,7 @@
 """
 Two-Factor Authentication models and utilities.
 """
+
 import pyotp
 import qrcode
 from io import BytesIO
@@ -16,9 +17,7 @@ class UserTwoFactorAuth(models.Model):
     """Model for storing user 2FA settings."""
 
     user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name="two_factor_auth"
+        User, on_delete=models.CASCADE, related_name="two_factor_auth"
     )
     is_enabled = models.BooleanField(default=False)
     secret_key = models.CharField(max_length=32, blank=True)
@@ -74,6 +73,7 @@ class UserTwoFactorAuth(models.Model):
             List of backup codes
         """
         import secrets
+
         codes = [secrets.token_hex(4).upper() for _ in range(count)]
         self.backup_codes = codes
         self.save()
@@ -107,8 +107,7 @@ class UserTwoFactorAuth(models.Model):
 
         totp = self.get_totp()
         uri = totp.provisioning_uri(
-            name=self.user.email,
-            issuer_name="Bwire Global Tech"
+            name=self.user.email, issuer_name="Bwire Global Tech"
         )
 
         qr = qrcode.QRCode(version=1, box_size=10, border=5)
@@ -138,9 +137,7 @@ class TwoFactorAuthenticationLog(models.Model):
     )
 
     user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="two_factor_logs"
+        User, on_delete=models.CASCADE, related_name="two_factor_logs"
     )
     event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
     ip_address = models.GenericIPAddressField()

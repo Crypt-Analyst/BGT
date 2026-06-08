@@ -4,20 +4,27 @@ from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
 
-DJANGO_ENABLE_SSL = os.getenv("DJANGO_ENABLE_SSL", "False").lower() in {"1", "true", "yes"}
-DJANGO_SECURE_SSL_REDIRECT = os.getenv("DJANGO_SECURE_SSL_REDIRECT", "False").lower() in {"1", "true", "yes"}
+DJANGO_ENABLE_SSL = os.getenv("DJANGO_ENABLE_SSL", "False").lower() in {
+    "1",
+    "true",
+    "yes",
+}
+DJANGO_SECURE_SSL_REDIRECT = os.getenv(
+    "DJANGO_SECURE_SSL_REDIRECT", "False"
+).lower() in {"1", "true", "yes"}
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() in {"1", "true", "yes"}
 
 allowed_hosts_env = os.getenv("DJANGO_ALLOWED_HOSTS", "").strip()
 if allowed_hosts_env:
-    ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]
+    ALLOWED_HOSTS = [
+        host.strip() for host in allowed_hosts_env.split(",") if host.strip()
+    ]
 elif DEBUG:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
 else:
@@ -77,7 +84,11 @@ DATABASES = {
 }
 
 CONN_MAX_AGE = int(os.getenv("DJANGO_DB_CONN_MAX_AGE", "60"))
-ATOMIC_REQUESTS = os.getenv("DJANGO_ATOMIC_REQUESTS", "True").lower() in {"1", "true", "yes"}
+ATOMIC_REQUESTS = os.getenv("DJANGO_ATOMIC_REQUESTS", "True").lower() in {
+    "1",
+    "true",
+    "yes",
+}
 
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 if DATABASE_URL:
@@ -96,7 +107,9 @@ if DATABASE_URL:
 
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -131,7 +144,11 @@ else:
     )
     EMAIL_HOST = os.getenv("DJANGO_EMAIL_HOST", "")
     EMAIL_PORT = int(os.getenv("DJANGO_EMAIL_PORT", "587"))
-    EMAIL_USE_TLS = os.getenv("DJANGO_EMAIL_USE_TLS", "True").lower() in {"1", "true", "yes"}
+    EMAIL_USE_TLS = os.getenv("DJANGO_EMAIL_USE_TLS", "True").lower() in {
+        "1",
+        "true",
+        "yes",
+    }
     EMAIL_HOST_USER = os.getenv("DJANGO_EMAIL_HOST_USER", "")
     EMAIL_HOST_PASSWORD = os.getenv("DJANGO_EMAIL_HOST_PASSWORD", "")
 
@@ -175,7 +192,9 @@ trusted_origins = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").strip()
 cors_origins = os.getenv("DJANGO_CORS_ALLOWED_ORIGINS", "").strip()
 
 if trusted_origins:
-    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in trusted_origins.split(",") if origin.strip()]
+    CSRF_TRUSTED_ORIGINS = [
+        origin.strip() for origin in trusted_origins.split(",") if origin.strip()
+    ]
 elif DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         "https://localhost:5173",
@@ -185,7 +204,9 @@ elif DEBUG:
     ]
 
 if cors_origins:
-    CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins.split(",") if origin.strip()]
+    CORS_ALLOWED_ORIGINS = [
+        origin.strip() for origin in cors_origins.split(",") if origin.strip()
+    ]
 elif DEBUG:
     CORS_ALLOWED_ORIGINS = [
         "https://localhost:5173",
@@ -315,7 +336,9 @@ CSRF_COOKIE_SECURE = not DEBUG or DJANGO_ENABLE_SSL
 CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_AGE = None  # Session cookie
-CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "https://localhost:8000").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv(
+    "DJANGO_CSRF_TRUSTED_ORIGINS", "https://localhost:8000"
+).split(",")
 
 # Security Headers
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -345,8 +368,13 @@ CHAT_RATE_LIMIT_WINDOW_SECONDS = int(os.getenv("CHAT_RATE_LIMIT_WINDOW_SECONDS",
 
 # Password Validation
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 12}},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {"min_length": 12},
+    },
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
@@ -395,7 +423,9 @@ if SENTRY_DSN:
         import sentry_sdk
         from sentry_sdk.integrations.django import DjangoIntegration
 
-        sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()], traces_sample_rate=0.1)
+        sentry_sdk.init(
+            dsn=SENTRY_DSN, integrations=[DjangoIntegration()], traces_sample_rate=0.1
+        )
     except Exception:
         # Do not fail startup if Sentry is unavailable
         pass

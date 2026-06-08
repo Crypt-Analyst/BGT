@@ -48,7 +48,12 @@ from .models import (
     TermsPage,
     TimelineStep,
 )
-from .services import site_context, create_project_request, build_contact_emails, build_chat_messages
+from .services import (
+    site_context,
+    create_project_request,
+    build_contact_emails,
+    build_chat_messages,
+)
 from .tasks import send_email_task, call_openai_chat
 from .utils import rate_limit, get_client_ip
 from openai import OpenAI
@@ -88,7 +93,9 @@ def about(request):
     context.update(
         {
             "about_hero": AboutHero.objects.first(),
-            "about_mission_vision": about_cards.filter(section__in=["mission", "vision"]),
+            "about_mission_vision": about_cards.filter(
+                section__in=["mission", "vision"]
+            ),
             "about_what": about_cards.filter(section="what"),
             "about_values": about_cards.filter(section="values"),
             "about_steps": AboutStep.objects.all(),
@@ -174,7 +181,9 @@ def portfolio(request):
 
 @cache_page(60)
 def portfolio_detail(request, pk):
-    item = get_object_or_404(PortfolioItem.objects.prefetch_related("media_items"), pk=pk)
+    item = get_object_or_404(
+        PortfolioItem.objects.prefetch_related("media_items"), pk=pk
+    )
     context = site_context(
         f"{item.title} | Portfolio | Bwire Global Tech",
         item.body,
@@ -313,10 +322,14 @@ def chat_ai(request):
 
     if hasattr(call_openai_chat, "apply_async"):
         try:
-            task = call_openai_chat.apply_async((messages,), {"model": "gpt-4o-mini", "temperature": 0.3})
+            task = call_openai_chat.apply_async(
+                (messages,), {"model": "gpt-4o-mini", "temperature": 0.3}
+            )
             task_result = task.get(timeout=15)
             if not task_result.get("ok"):
-                logger.error("call_openai_chat task failed: %s", task_result.get("error"))
+                logger.error(
+                    "call_openai_chat task failed: %s", task_result.get("error")
+                )
                 return JsonResponse({"error": "AI service unavailable"}, status=503)
             response = task_result["response"]
         except Exception as exc:
@@ -337,7 +350,10 @@ def chat_ai(request):
     try:
         answer = response.choices[0].message.content.strip()
     except Exception:
-        logger.exception("Unexpected OpenAI response structure: %s", getattr(response, "__dict__", response))
+        logger.exception(
+            "Unexpected OpenAI response structure: %s",
+            getattr(response, "__dict__", response),
+        )
         return JsonResponse({"error": "AI response error"}, status=502)
 
     logger.info("chat_ai used ip=%s", get_client_ip(request))

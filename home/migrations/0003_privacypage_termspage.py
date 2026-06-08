@@ -6,26 +6,63 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0002_aboutcapability_aboutcard_abouthero_aboutowner_and_more'),
+        ("home", "0002_aboutcapability_aboutcard_abouthero_aboutowner_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PrivacyPage',
+            name="PrivacyPage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(default='Privacy Policy - Bwire Global Tech', max_length=200)),
-                ('lede', models.TextField(default='This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.')),
-                ('body', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        default="Privacy Policy - Bwire Global Tech", max_length=200
+                    ),
+                ),
+                (
+                    "lede",
+                    models.TextField(
+                        default="This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services."
+                    ),
+                ),
+                ("body", models.TextField()),
             ],
         ),
         migrations.CreateModel(
-            name='TermsPage',
+            name="TermsPage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(default='Terms of Use - Bwire Global Tech (Advanced Version)', max_length=200)),
-                ('lede', models.TextField(default='These Terms govern your access to and use of our website, services, and digital solutions.')),
-                ('body', models.TextField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(
+                        default="Terms of Use - Bwire Global Tech (Advanced Version)",
+                        max_length=200,
+                    ),
+                ),
+                (
+                    "lede",
+                    models.TextField(
+                        default="These Terms govern your access to and use of our website, services, and digital solutions."
+                    ),
+                ),
+                ("body", models.TextField()),
             ],
         ),
     ]

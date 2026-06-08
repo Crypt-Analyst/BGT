@@ -33,8 +33,13 @@ def rate_limit(limit: int = 60, period: int = 60):
                 count = cache.get(key, 0)
                 if count >= limit:
                     # Decide JSON vs HTML response
-                    accepts_json = "application/json" in request.META.get("HTTP_ACCEPT", "")
-                    if accepts_json or request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    accepts_json = "application/json" in request.META.get(
+                        "HTTP_ACCEPT", ""
+                    )
+                    if (
+                        accepts_json
+                        or request.headers.get("x-requested-with") == "XMLHttpRequest"
+                    ):
                         return JsonResponse({"error": "Too many requests"}, status=429)
                     return HttpResponse("Too many requests", status=429)
                 else:

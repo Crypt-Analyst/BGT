@@ -7,58 +7,117 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0003_privacypage_termspage'),
+        ("home", "0003_privacypage_termspage"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='GalleryMedia',
+            name="GalleryMedia",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('media_type', models.CharField(choices=[('image', 'Image'), ('video', 'Video')], default='image', max_length=10)),
-                ('title', models.CharField(blank=True, max_length=140)),
-                ('caption', models.TextField(blank=True)),
-                ('image', models.ImageField(blank=True, upload_to='media/images/')),
-                ('video', models.FileField(blank=True, upload_to='media/videos/')),
-                ('order', models.PositiveIntegerField(default=0)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "media_type",
+                    models.CharField(
+                        choices=[("image", "Image"), ("video", "Video")],
+                        default="image",
+                        max_length=10,
+                    ),
+                ),
+                ("title", models.CharField(blank=True, max_length=140)),
+                ("caption", models.TextField(blank=True)),
+                ("image", models.ImageField(blank=True, upload_to="media/images/")),
+                ("video", models.FileField(blank=True, upload_to="media/videos/")),
+                ("order", models.PositiveIntegerField(default=0)),
             ],
             options={
-                'ordering': ['order', 'id'],
-                'abstract': False,
+                "ordering": ["order", "id"],
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='HomeCaseStudyMedia',
+            name="HomeCaseStudyMedia",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('media_type', models.CharField(choices=[('image', 'Image'), ('video', 'Video')], default='image', max_length=10)),
-                ('title', models.CharField(blank=True, max_length=140)),
-                ('caption', models.TextField(blank=True)),
-                ('image', models.ImageField(blank=True, upload_to='media/images/')),
-                ('video', models.FileField(blank=True, upload_to='media/videos/')),
-                ('order', models.PositiveIntegerField(default=0)),
-                ('case_study', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='media_items', to='home.homecasestudy')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "media_type",
+                    models.CharField(
+                        choices=[("image", "Image"), ("video", "Video")],
+                        default="image",
+                        max_length=10,
+                    ),
+                ),
+                ("title", models.CharField(blank=True, max_length=140)),
+                ("caption", models.TextField(blank=True)),
+                ("image", models.ImageField(blank=True, upload_to="media/images/")),
+                ("video", models.FileField(blank=True, upload_to="media/videos/")),
+                ("order", models.PositiveIntegerField(default=0)),
+                (
+                    "case_study",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="media_items",
+                        to="home.homecasestudy",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['order', 'id'],
-                'abstract': False,
+                "ordering": ["order", "id"],
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='PortfolioItemMedia',
+            name="PortfolioItemMedia",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('media_type', models.CharField(choices=[('image', 'Image'), ('video', 'Video')], default='image', max_length=10)),
-                ('title', models.CharField(blank=True, max_length=140)),
-                ('caption', models.TextField(blank=True)),
-                ('image', models.ImageField(blank=True, upload_to='media/images/')),
-                ('video', models.FileField(blank=True, upload_to='media/videos/')),
-                ('order', models.PositiveIntegerField(default=0)),
-                ('portfolio_item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='media_items', to='home.portfolioitem')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "media_type",
+                    models.CharField(
+                        choices=[("image", "Image"), ("video", "Video")],
+                        default="image",
+                        max_length=10,
+                    ),
+                ),
+                ("title", models.CharField(blank=True, max_length=140)),
+                ("caption", models.TextField(blank=True)),
+                ("image", models.ImageField(blank=True, upload_to="media/images/")),
+                ("video", models.FileField(blank=True, upload_to="media/videos/")),
+                ("order", models.PositiveIntegerField(default=0)),
+                (
+                    "portfolio_item",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="media_items",
+                        to="home.portfolioitem",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['order', 'id'],
-                'abstract': False,
+                "ordering": ["order", "id"],
+                "abstract": False,
             },
         ),
     ]
