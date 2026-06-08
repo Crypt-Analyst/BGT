@@ -1,15 +1,16 @@
 import json
-import os
 import logging
+import os
 
 from django.conf import settings
+from django.core.paginator import Paginator
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
-from django.core.paginator import Paginator
+from openai import OpenAI
 
 from .forms import ContactForm
 from .models import (
@@ -35,12 +36,12 @@ from .models import (
     PortfolioHero,
     PortfolioItem,
     PortfolioOutcome,
-    PrivacyPage,
     PricingAddon,
     PricingCta,
     PricingHero,
     PricingPackage,
     PricingTerms,
+    PrivacyPage,
     ServiceItem,
     ServicesFaq,
     ServicesHero,
@@ -49,14 +50,13 @@ from .models import (
     TimelineStep,
 )
 from .services import (
-    site_context,
-    create_project_request,
-    build_contact_emails,
     build_chat_messages,
+    build_contact_emails,
+    create_project_request,
+    site_context,
 )
-from .tasks import send_email_task, call_openai_chat
-from .utils import rate_limit, get_client_ip
-from openai import OpenAI
+from .tasks import call_openai_chat, send_email_task
+from .utils import get_client_ip, rate_limit
 
 logger = logging.getLogger("home.views")
 

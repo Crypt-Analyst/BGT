@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import os
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bwire_global_tech.settings")

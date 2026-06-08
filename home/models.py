@@ -3,7 +3,7 @@ from django.db import models
 
 # Import audit and 2FA models
 from .audit import AuditLog, AuditLogManager  # noqa: F401
-from .two_factor_auth import UserTwoFactorAuth, TwoFactorAuthenticationLog  # noqa: F401
+from .two_factor_auth import TwoFactorAuthenticationLog, UserTwoFactorAuth  # noqa: F401
 
 
 class ProjectRequest(models.Model):

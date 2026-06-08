@@ -2,12 +2,12 @@
 Two-Factor Authentication models and utilities.
 """
 
-import pyotp
-import qrcode
-from io import BytesIO
 import base64
 from datetime import datetime, timedelta
+from io import BytesIO
 
+import pyotp
+import qrcode
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone

@@ -8,8 +8,8 @@ import subprocess
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
+from django.core.management.base import BaseCommand, CommandError
 
 
 class Command(BaseCommand):
