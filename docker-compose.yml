@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: bgt_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build: .
+    container_name: bgt_web
+    command: gunicorn bwire_global_tech.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120 --graceful-timeout 30
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_DEBUG=False
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  worker:
+    build: .
+    container_name: bgt_worker
+    command: celery -A bwire_global_tech worker --loglevel=info --concurrency=4
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+    environment:
+      - DJANGO_DEBUG=False
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped

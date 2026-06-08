@@ -409,6 +409,17 @@ class Command(BaseCommand):
                         bullet_3="UI support",
                         order=4,
                     ),
+                    ServiceItem(
+                        title="ERP systems",
+                        body=(
+                            "Enterprise Resource Planning systems delivered as a service: inventory, accounting, and "
+                            "reporting integrated for your business."
+                        ),
+                        bullet_1="Inventory management",
+                        bullet_2="Accounting integration",
+                        bullet_3="Reporting dashboards",
+                        order=5,
+                    ),
                 ]
             )
 
@@ -623,6 +634,19 @@ class Command(BaseCommand):
                         bullet_3="Scalable sections",
                         featured=False,
                         order=3,
+                    ),
+                    PortfolioItem(
+                        label="Ardhi Plus",
+                        title="Ardhi Plus Properties (ardhiplus.co.ke)",
+                        body=(
+                            "Delivered a property management presence and systems integration for Ardhi Plus, including "
+                            "CRM, listings, and admin workflows."
+                        ),
+                        bullet_1="Property listings",
+                        bullet_2="Admin workflows",
+                        bullet_3="Client portal",
+                        featured=False,
+                        order=4,
                     ),
                 ]
             )

@@ -20,7 +20,7 @@
       "@type": "Organization",
       "name": "Bwire Global Tech",
       "url": "https://bwireglobaltech.com/",
-      "logo": "{{ request.build_absolute_uri|default:'' }}{% static 'images/logo.png' %}",
+      "logo": "{% if request.build_absolute_uri %}{{ request.build_absolute_uri|slice:':-1' }}{% else %}https://bwireglobaltech.com/{% endif %}{% static 'images/logo.png' %}",
       "description": "Bwire Global Tech - The Mind Behind the Machine.",
       "contactPoint": [{
         "@type": "ContactPoint",
@@ -38,27 +38,50 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <!-- Google Analytics Placeholder -->
-    <!-- Google Optimize (A/B Testing) Placeholder -->
-    <script src="https://www.googleoptimize.com/optimize.js?id=OPT-XXXXXXX"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-X"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-XXXXXXX-X');
-    </script>
-    <!-- Hotjar Tracking Code Placeholder -->
-    <!-- Core Web Vitals Performance Metrics Placeholder -->
+    {% if google_analytics_id %}
+      <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_id }}"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ google_analytics_id }}'{% if google_optimize_id %}, { 'optimize_id': '{{ google_optimize_id }}' }{% endif %});
+        gtag('event', 'page_view', { page_path: window.location.pathname });
+      </script>
+    {% else %}
+      <!-- Google Analytics not configured. Set GOOGLE_ANALYTICS_MEASUREMENT_ID in the environment. -->
+    {% endif %}
+    {% if google_optimize_id %}
+      <script async src="https://www.googleoptimize.com/optimize.js?id={{ google_optimize_id }}"></script>
+    {% endif %}
     <script src="https://unpkg.com/web-vitals@3/dist/web-vitals.iife.js"></script>
     <script>
       window.addEventListener('DOMContentLoaded', function() {
-        if (window.webVitals) {
-          webVitals.getCLS(console.log);
-          webVitals.getFID(console.log);
-          webVitals.getLCP(console.log);
+        if (window.webVitals && window.reportWebVitals) {
+          webVitals.getCLS(window.reportWebVitals);
+          webVitals.getFID(window.reportWebVitals);
+          webVitals.getLCP(window.reportWebVitals);
+          webVitals.getFCP(window.reportWebVitals);
+          webVitals.getTTFB(window.reportWebVitals);
         }
       });
+    </script>
+    <script>
+      window.bgtAB = window.bgtAB || {};
+      (function() {
+        const storageKey = 'bgt_ab_variant';
+        let variant = localStorage.getItem(storageKey);
+        if (!variant) {
+          variant = Math.random() < 0.5 ? 'A' : 'B';
+          localStorage.setItem(storageKey, variant);
+        }
+        window.bgtAB.variant = variant;
+        document.documentElement.dataset.abVariant = variant;
+        if (window.gtag) {
+          gtag('event', 'ab_variant_assigned', { ab_variant: variant });
+        } else if (window.dataLayer) {
+          dataLayer.push({ event: 'ab_variant_assigned', ab_variant: variant });
+        }
+      })();
     </script>
     <script>
       (function(h,o,t,j,a,r){
@@ -101,7 +124,7 @@
         {% endfor %}
       </nav>
 
-      <a class="button button--ghost site-header__cta" href="{% url 'contact' %}" aria-label="Start a project" tabindex="0" style="min-width:48px;min-height:48px;">
+      <a class="button button--ghost site-header__cta" id="header-cta" href="{% url 'contact' %}" aria-label="Start a project" tabindex="0" style="min-width:48px;min-height:48px;" data-ab-label-a="{{ site_settings.header_cta_label|default:"Start a project" }}">
         {{ site_settings.header_cta_label|default:"Start a project" }}
       </a>
     </div>
@@ -147,6 +170,7 @@
         <a href="{% url 'services' %}">AI &amp; Data Science</a>
         <a href="{% url 'services' %}">Cybersecurity</a>
         <a href="{% url 'services' %}">Web &amp; cloud solutions</a>
+        <a href="{% url 'services' %}">ERP systems</a>
       </div>
       <div class="site-footer__column">
         <h4>Company</h4>

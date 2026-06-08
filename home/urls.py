@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import about, chat_ai, contact, gallery, home, portfolio, portfolio_detail, pricing, privacy, services, terms
+from .api_docs import api_docs
 
 
 urlpatterns = [
@@ -14,5 +15,6 @@ urlpatterns = [
     path("contact/", contact, name="contact"),
     path("terms/", terms, name="terms"),
     path("privacy/", privacy, name="privacy"),
+    path("api/", api_docs, name="api_docs"),
     path("api/chat/", chat_ai, name="chat_ai"),
 ]

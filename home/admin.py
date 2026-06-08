@@ -38,6 +38,9 @@ from .models import (
 	SiteSettings,
 	TermsPage,
 	TimelineStep,
+	AuditLog,
+	UserTwoFactorAuth,
+	TwoFactorAuthenticationLog,
 )
 
 
@@ -120,7 +123,7 @@ class HomeCtaAdmin(admin.ModelAdmin):
 	list_display = ("title", "button_label")
 	search_fields = ("title", "button_label")
 	fieldsets = (
-		(None, {"fields": ("title", "button_label", "url")}),
+		(None, {"fields": ("eyebrow", "title", "body", "button_label")} ),
 	)
 
 

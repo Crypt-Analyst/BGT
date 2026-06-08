@@ -1,5 +1,48 @@
 // Smooth scrolling for internal links
+
+function reportWebVitals(metric) {
+  const payload = {
+    event_category: 'Web Vitals',
+    value: Math.round(metric.value),
+    metric_name: metric.name,
+    metric_id: metric.id,
+    page_path: window.location.pathname,
+  };
+
+  if (window.gtag) {
+    window.gtag('event', metric.name, payload);
+  } else if (window.dataLayer) {
+    window.dataLayer.push({ event: metric.name, ...payload });
+  } else {
+    console.log('Web Vitals metric:', payload);
+  }
+}
+
+function applyABTestVariants() {
+  const storageKey = 'bgt_ab_variant';
+  let variant = localStorage.getItem(storageKey);
+  if (!variant) {
+    variant = Math.random() < 0.5 ? 'B' : 'A';
+    localStorage.setItem(storageKey, variant);
+  }
+  document.documentElement.dataset.abVariant = variant;
+
+  const headerCta = document.getElementById('header-cta');
+  if (headerCta) {
+    if (variant === 'B') {
+      headerCta.textContent = 'Book a free consult';
+      headerCta.classList.add('button--primary');
+      headerCta.classList.remove('button--ghost');
+    } else {
+      headerCta.textContent = headerCta.dataset.abLabelA || 'Start a project';
+      headerCta.classList.add('button--ghost');
+      headerCta.classList.remove('button--primary');
+    }
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+  applyABTestVariants();
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       const target = document.querySelector(this.getAttribute('href'));

@@ -48,3 +48,34 @@ class ContactForm(forms.Form):
         widget=forms.Select(),
     )
     reference_file = forms.FileField(required=False)
+    # Honeypot field to trap bots — should remain empty in real submissions
+    hp_field = forms.CharField(required=False, widget=forms.HiddenInput())
+
+    def clean_hp_field(self):
+        val = self.cleaned_data.get("hp_field")
+        if val:
+            raise forms.ValidationError("Spam detected.")
+        return val
+
+    def clean_reference_file(self):
+        f = self.cleaned_data.get("reference_file")
+        if not f:
+            return f
+        # 2.5 MB limit (same as settings DATA_UPLOAD_MAX_MEMORY_SIZE)
+        max_size = 2_621_440
+        if f.size > max_size:
+            raise forms.ValidationError("File too large (max 2.5MB).")
+        # Basic content-type check (allow common document and image types)
+        allowed = [
+            "image/png",
+            "image/jpeg",
+            "image/jpg",
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "text/plain",
+        ]
+        content_type = getattr(f, "content_type", "")
+        if content_type and content_type not in allowed:
+            raise forms.ValidationError("Unsupported file type.")
+        return f

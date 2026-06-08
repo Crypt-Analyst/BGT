@@ -1,25 +1,15 @@
-from django.shortcuts import get_object_or_404
-def portfolio_detail(request, pk):
-    item = get_object_or_404(PortfolioItem.objects.prefetch_related("media_items"), pk=pk)
-    context = site_context(
-        f"{item.title} | Portfolio | Bwire Global Tech",
-        item.body,
-        "portfolio",
-    )
-    context["item"] = item
-    return render(request, "home/portfolio_detail.html", context)
 import json
 import os
-from urllib.parse import quote
+import logging
 
 from django.conf import settings
-from django.core.mail import EmailMessage, send_mail
+from django.db import transaction
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
-
-from openai import OpenAI
+from django.core.paginator import Paginator
 
 from .forms import ContactForm
 from .models import (
@@ -51,7 +41,6 @@ from .models import (
     PricingHero,
     PricingPackage,
     PricingTerms,
-    ProjectRequest,
     ServiceItem,
     ServicesFaq,
     ServicesHero,
@@ -59,84 +48,15 @@ from .models import (
     TermsPage,
     TimelineStep,
 )
+from .services import site_context, create_project_request, build_contact_emails, build_chat_messages
+from .tasks import send_email_task, call_openai_chat
+from .utils import rate_limit, get_client_ip
+from openai import OpenAI
+
+logger = logging.getLogger("home.views")
 
 
-SITE_NAME = "Bwire Global Tech"
-TAGLINE = "The Mind Behind the Machine"
-SITE_CONTEXT = """
-Site name: Bwire Global Tech
-Tagline: The Mind Behind the Machine
-Positioning: Web development first. AI second.
-
-Home: We build websites first, then AI solutions that support the business. Focus on real work, not generic filler.
-Highlights: Web development, AI solutions, dashboards and support. CTA: Start a project, See the vision.
-
-About: Mission is to build practical websites that help businesses show up professionally online.
-Vision is to be a trusted partner for modern web development and useful AI work.
-Owner: Bilford Derick Bwire.
-
-Services: Software development for landing pages, business portals, and internal tools.
-AI solutions include assistants, predictive models, BwiResQ AI ideas, and smart analytics.
-Support services include cloud setup, security checks, maintenance plans.
-Design and dashboards include graphic design, UI support, reporting dashboards.
-Delivery flow: Discover goals and AI needs, Design pages and conversion path, Launch and refine content and performance.
-
-Portfolio: Case studies include corporate rebrand website, AI services landing page, business systems hub.
-Outcomes: +42% longer engagement, +31% more inquiries, 100% brand consistency.
-Deep dive: Corporate rebrand website improved engagement and inquiries with a new story and consistent visual system.
-
-Testimonials: Premium web presence, faster delivery, clearer messaging, and stronger conversion flow.
-
-Pricing page: Web development packages, AI price, add-ons, and payment notes.
-Deliverables: Production-ready site, performance baseline, growth roadmap.
-Packages: Starter (Ksh 30,000), Business (Ksh 65,000), Premium (Ksh 120,000).
-AI solutions: $700 per project.
-Add-ons: domain registration, hosting, maintenance, SEO package, extra pages.
-Notes: 50% deposit before start, balance after completion, prices may vary by requirements.
-FAQ: Maintenance available, redesigns available, timelines set after brief review.
-
-Contact: Email bwireglobaltech917@gmail.com, phone 0722206805.
-Contact page requests: business name, website goals, AI idea if needed, deadline or launch date.
-Next steps: Review, call, proposal.
-""".strip()
-
-
-def get_site_settings():
-    return SiteSettings.objects.first()
-
-
-def build_whatsapp_link(site_settings: SiteSettings | None) -> str:
-    number = site_settings.whatsapp_number if site_settings else "254722206805"
-    message = (
-        site_settings.whatsapp_message
-        if site_settings
-        else "Hi Bwire Global Tech, I'd like to start a project."
-    )
-    return f"https://wa.me/{number}?text={quote(message)}"
-
-
-def site_context(page_title: str, page_description: str, active_page: str) -> dict:
-    site_settings = get_site_settings()
-    return {
-        "site_settings": site_settings,
-        "site_name": site_settings.site_name if site_settings else SITE_NAME,
-        "tagline": site_settings.tagline if site_settings else TAGLINE,
-        "page_title": page_title,
-        "page_description": page_description,
-        "active_page": active_page,
-        "whatsapp_link": build_whatsapp_link(site_settings),
-        "nav_items": [
-            {"label": "Home", "url_name": "home", "name": "home"},
-            {"label": "About", "url_name": "about", "name": "about"},
-            {"label": "Services", "url_name": "services", "name": "services"},
-            {"label": "Pricing", "url_name": "pricing", "name": "pricing"},
-            {"label": "Portfolio", "url_name": "portfolio", "name": "portfolio"},
-            {"label": "Gallery", "url_name": "gallery", "name": "gallery"},
-            {"label": "Contact", "url_name": "contact", "name": "contact"},
-        ],
-    }
-
-
+@cache_page(60)
 def home(request):
     context = site_context(
         "Bwire Global Tech | The Mind Behind the Machine",
@@ -157,6 +77,7 @@ def home(request):
     return render(request, "home/index.html", context)
 
 
+@cache_page(60)
 def about(request):
     context = site_context(
         "About | Bwire Global Tech",
@@ -178,6 +99,7 @@ def about(request):
     return render(request, "home/about.html", context)
 
 
+@cache_page(60)
 def services(request):
     context = site_context(
         "Services | Bwire Global Tech",
@@ -196,6 +118,7 @@ def services(request):
     return render(request, "home/services.html", context)
 
 
+@cache_page(60)
 def pricing(request):
     context = site_context(
         "Pricing | Bwire Global Tech",
@@ -214,27 +137,30 @@ def pricing(request):
     return render(request, "home/pricing.html", context)
 
 
+@cache_page(60)
 def portfolio(request):
     context = site_context(
         "Portfolio | Bwire Global Tech",
         "See sample case studies and project outcomes built for a modern digital brand.",
         "portfolio",
     )
-    # Filtering
     category = request.GET.get("category")
     sort = request.GET.get("sort", "order")
     items = PortfolioItem.objects.prefetch_related("media_items")
     if category:
         items = items.filter(category=category)
-    # Sorting
     if sort == "title":
         items = items.order_by("title")
     else:
         items = items.order_by("order", "id")
+
+    paginator = Paginator(items, 12)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     context.update(
         {
             "portfolio_hero": PortfolioHero.objects.first(),
-            "portfolio_items": items,
+            "portfolio_items": page_obj,
             "portfolio_outcomes": PortfolioOutcome.objects.all(),
             "portfolio_deep_dive": PortfolioDeepDive.objects.first(),
             "portfolio_deep_dive_metrics": PortfolioDeepDiveMetric.objects.all(),
@@ -246,6 +172,19 @@ def portfolio(request):
     return render(request, "home/portfolio.html", context)
 
 
+@cache_page(60)
+def portfolio_detail(request, pk):
+    item = get_object_or_404(PortfolioItem.objects.prefetch_related("media_items"), pk=pk)
+    context = site_context(
+        f"{item.title} | Portfolio | Bwire Global Tech",
+        item.body,
+        "portfolio",
+    )
+    context["item"] = item
+    return render(request, "home/portfolio_detail.html", context)
+
+
+@cache_page(60)
 def gallery(request):
     context = site_context(
         "Gallery | Bwire Global Tech",
@@ -256,65 +195,65 @@ def gallery(request):
     return render(request, "home/gallery.html", context)
 
 
+@rate_limit(limit=6, period=60)
 def contact(request):
     form = ContactForm(request.POST or None, request.FILES or None)
     submitted = False
     contact_hero = ContactHero.objects.first()
 
-    if request.method == "POST" and form.is_valid():
-        cleaned = form.cleaned_data
-        ProjectRequest.objects.create(
-            full_name=cleaned["full_name"],
-            email=cleaned["email"],
-            phone=cleaned["phone"],
-            project_type=cleaned["project_type"],
-            message=cleaned["message"],
-            budget_range=cleaned.get("budget_range", ""),
-            timeline=cleaned.get("timeline", ""),
-            referral_source=cleaned.get("referral_source", ""),
-            reference_file=cleaned.get("reference_file"),
-        )
+    if request.method == "POST":
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    create_project_request(form.cleaned_data)
 
-        admin_subject = f"New project request: {cleaned['full_name']}"
-        admin_message = (
-            f"Full name: {cleaned['full_name']}\n"
-            f"Email: {cleaned['email']}\n"
-            f"Phone: {cleaned['phone']}\n"
-            f"Project type: {cleaned['project_type']}\n"
-            f"Budget range: {cleaned.get('budget_range') or 'Not provided'}\n"
-            f"Timeline: {cleaned.get('timeline') or 'Not provided'}\n"
-            f"Referral source: {cleaned.get('referral_source') or 'Not provided'}\n\n"
-            "Project description:\n"
-            f"{cleaned['message']}\n"
-        )
-        admin_email = EmailMessage(
-            subject=admin_subject,
-            body=admin_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[settings.CONTACT_EMAIL],
-            reply_to=[cleaned["email"]],
-        )
-        admin_email.send(fail_silently=not settings.DEBUG)
+                admin_email, visitor_email = build_contact_emails(
+                    form.cleaned_data, form.cleaned_data["email"]
+                )
 
-        visitor_subject = "We received your project request"
-        visitor_message = (
-            "Thanks for reaching out to Bwire Global Tech.\n\n"
-            "We have received your project request and will get back to you within 24 hours.\n"
-            "If you need to add more details, just reply to this email."
-        )
-        send_mail(
-            visitor_subject,
-            visitor_message,
-            settings.DEFAULT_FROM_EMAIL,
-            [cleaned["email"]],
-            fail_silently=not settings.DEBUG,
-        )
-        submitted = True
-        form = ContactForm()
+                if hasattr(send_email_task, "apply_async"):
+                    send_email_task.apply_async(
+                        (
+                            admin_email.subject,
+                            admin_email.body,
+                            admin_email.from_email,
+                            admin_email.to,
+                            admin_email.reply_to,
+                        )
+                    )
+                    send_email_task.apply_async(
+                        (
+                            visitor_email.subject,
+                            visitor_email.body,
+                            visitor_email.from_email,
+                            visitor_email.to,
+                            visitor_email.reply_to,
+                        )
+                    )
+                else:
+                    send_email_task(
+                        admin_email.subject,
+                        admin_email.body,
+                        admin_email.from_email,
+                        admin_email.to,
+                        admin_email.reply_to,
+                    )
+                    send_email_task(
+                        visitor_email.subject,
+                        visitor_email.body,
+                        visitor_email.from_email,
+                        visitor_email.to,
+                        visitor_email.reply_to,
+                    )
+                submitted = True
+            except Exception as exc:
+                logger.exception("Failed to process contact request: %s", exc)
+        else:
+            logger.warning("Contact form validation failed: %s", form.errors.as_json())
 
     context = site_context(
         "Contact | Bwire Global Tech",
-        "Start a project with Bwire Global Tech through a direct contact form and project brief.",
+        "Share your project goals, timeline, and ideas with Bwire Global Tech.",
         "contact",
     )
     context.update(
@@ -329,6 +268,7 @@ def contact(request):
     return render(request, "home/contact.html", context)
 
 
+@cache_page(60)
 def terms(request):
     context = site_context(
         "Terms of Use | Bwire Global Tech",
@@ -349,11 +289,11 @@ def privacy(request):
     return render(request, "home/privacy.html", context)
 
 
+@rate_limit(limit=12, period=60)
 @require_POST
 @csrf_protect
 def chat_ai(request):
-
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = settings.OPENAI_API_KEY
     if not api_key:
         return JsonResponse({"error": "Missing OPENAI_API_KEY."}, status=500)
 
@@ -368,34 +308,37 @@ def chat_ai(request):
     if not user_message:
         return JsonResponse({"error": "Message is required."}, status=400)
 
-    client = OpenAI(api_key=api_key)
-    system_prompt = (
-        "You are Lee, the assistant for the Bwire Global Tech website. "
-        "Use ONLY the site context provided. "
-        "First, make sure you understand the visitor's request; if it is vague, ask a short clarifying question. "
-        "Avoid generic filler and keep responses concise and specific to Bwire Global Tech. "
-        "If the answer is not in the context, say you do not know and ask the visitor "
-        "to contact the team via email or phone."
-    )
+    messages = build_chat_messages(user_message, history)
+    response = None
 
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "system", "content": f"Site context:\n{SITE_CONTEXT}"},
-    ]
+    if hasattr(call_openai_chat, "apply_async"):
+        try:
+            task = call_openai_chat.apply_async((messages,), {"model": "gpt-4o-mini", "temperature": 0.3})
+            task_result = task.get(timeout=15)
+            if not task_result.get("ok"):
+                logger.error("call_openai_chat task failed: %s", task_result.get("error"))
+                return JsonResponse({"error": "AI service unavailable"}, status=503)
+            response = task_result["response"]
+        except Exception as exc:
+            logger.exception("OpenAI task error: %s", exc)
+            return JsonResponse({"error": "AI service unavailable"}, status=503)
+    else:
+        try:
+            client = OpenAI(api_key=api_key)
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=messages,
+                temperature=0.3,
+            )
+        except Exception as exc:
+            logger.exception("OpenAI API error: %s", exc)
+            return JsonResponse({"error": "AI service unavailable"}, status=503)
 
-    for item in history[-8:]:
-        role = item.get("role")
-        content = item.get("content")
-        if role in {"user", "assistant"} and isinstance(content, str):
-            messages.append({"role": role, "content": content})
+    try:
+        answer = response.choices[0].message.content.strip()
+    except Exception:
+        logger.exception("Unexpected OpenAI response structure: %s", getattr(response, "__dict__", response))
+        return JsonResponse({"error": "AI response error"}, status=502)
 
-    messages.append({"role": "user", "content": user_message})
-
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=messages,
-        temperature=0.3,
-    )
-
-    answer = response.choices[0].message.content.strip()
+    logger.info("chat_ai used ip=%s", get_client_ip(request))
     return JsonResponse({"answer": answer})
