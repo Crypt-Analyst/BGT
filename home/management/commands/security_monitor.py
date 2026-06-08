@@ -4,7 +4,6 @@ Security monitoring management command.
 
 from datetime import datetime, timedelta
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from home.audit import AuditLog, AuditLogManager
@@ -102,7 +101,7 @@ class Command(BaseCommand):
         suspicious = AuditLogManager.get_recent_suspicious_activity(days=7)
 
         self.stdout.write(
-            self.style.ERROR(f"=== Suspicious Activities (Last 7 Days) ===")
+            self.style.ERROR("=== Suspicious Activities (Last 7 Days) ===")
         )
 
         if not suspicious.exists():

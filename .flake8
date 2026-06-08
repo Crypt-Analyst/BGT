@@ -1,0 +1,15 @@
+[flake8]
+exclude =
+    .venv
+    venv
+    env
+    migrations
+    __pycache__
+    static
+    media
+    node_modules
+
+max-line-length = 120
+
+ignore =
+    E501

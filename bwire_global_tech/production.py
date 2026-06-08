@@ -35,10 +35,7 @@ def check_production_ready():
             "SQLite database detected in production (not recommended for production)"
         )
 
-    if (
-        not os.getenv("DATABASE_URL")
-        and "sqlite" not in settings.DATABASES["default"]["ENGINE"]
-    ):
+    if not os.getenv("DATABASE_URL") and "sqlite" not in settings.DATABASES["default"]["ENGINE"]:
         checks["errors"].append("DATABASE_URL not set but Postgres is configured")
 
     # Email checks

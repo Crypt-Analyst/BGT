@@ -195,7 +195,7 @@ class SQLInjectionProtectionMiddleware(MiddlewareMixin):
                     if pattern.lower() in value.lower():
                         client_ip, _ = get_client_ip(request)
                         security_logger.critical(
-                            f"Potential SQL injection attempt detected",
+                            "Potential SQL injection attempt detected",
                             extra={
                                 "ip": client_ip,
                                 "path": request.path,
