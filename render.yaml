@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: bgt-web
+    env: docker
+    plan: starter
+    dockerfilePath: Dockerfile
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn bwire_global_tech.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120
+
+  - type: worker
+    name: bgt-worker
+    env: docker
+    plan: starter
+    dockerfilePath: Dockerfile
+    startCommand: celery -A bwire_global_tech worker --loglevel=info --concurrency=4
