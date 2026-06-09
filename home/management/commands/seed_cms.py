@@ -750,7 +750,7 @@ class Command(BaseCommand):
                 '<li>"Company" refers to Bwire Global Tech</li>'
                 '<li>"Client" / "User" refers to any individual or entity using our services</li>'
                 '<li>"Services" include web development, AI solutions, data science, cybersecurity, '
-                'and digital systems</li>'
+                "and digital systems</li>"
                 '<li>"Website" refers to all pages under our domain</li>'
                 "</ul>"
                 "<h2>3. Eligibility</h2>"
