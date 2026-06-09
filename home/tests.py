@@ -22,7 +22,10 @@ class HomeViewsTests(TestCase):
             tiktok="bwireglobaltech",
             whatsapp_number="254722206805",
             whatsapp_message="Hi Bwire Global Tech, I'd like to start a project.",
-            footer_blurb="Premium digital systems with a strong visual identity, built for trust, speed, and conversion.",
+            footer_blurb=(
+                "Premium digital systems with a strong visual identity, built for trust, speed, "
+                "and conversion."
+            ),
             header_cta_label="Start a project",
         )
 

@@ -225,8 +225,9 @@ SENTRY_DSN = os.getenv("SENTRY_DSN", "")
 # Encryption
 ENCRYPTION_KEY = os.getenv(
     "ENCRYPTION_KEY",
-    "fHqZrK8vN2pL9mX7bYw4cJ5jG6hT3dF1eR0sQaWoU1iM=",  # Generate new key: from home.security import generate_encryption_key
+    "fHqZrK8vN2pL9mX7bYw4cJ5jG6hT3dF1eR0sQaWoU1iM=",
 )
+# Generate new key: from home.security import generate_encryption_key
 
 # File Upload Settings
 FILE_UPLOAD_PERMISSIONS = 0o644

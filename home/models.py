@@ -481,7 +481,10 @@ class ContactHero(models.Model):
     title = models.CharField(max_length=200)
     lede = models.TextField()
     success_message = models.TextField(
-        default="Thanks for reaching out! We have received your project request and will get back to you within 24 hours."
+        default=(
+            "Thanks for reaching out! We have received your project request and will get "
+            "back to you within 24 hours."
+        )
     )
 
     def __str__(self) -> str:
