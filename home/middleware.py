@@ -59,7 +59,10 @@ class SecurityHeadersMiddleware(MiddlewareMixin):
             "img-src 'self' data: https:",
             "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'",
             "font-src 'self' https://fonts.gstatic.com",
-            "script-src 'self' https://cdn.jsdelivr.net https://unpkg.com https://www.googletagmanager.com https://static.hotjar.com",
+            (
+                "script-src 'self' https://cdn.jsdelivr.net https://unpkg.com "
+                "https://www.googletagmanager.com https://static.hotjar.com"
+            ),
             "connect-src 'self'",
             "media-src 'self'",
         ]
